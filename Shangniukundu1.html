@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>单词测试</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      padding: 30px 40px;
+    }
+
+    h1, h2 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .question-container {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .question {
+      font-size: 28px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .option {
+      background-color: #f1f1f1;
+      padding: 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      text-align: center;
+      transition: background-color 0.3s, transform 0.3s;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .option:hover {
+      background-color: #ddd;
+      transform: scale(1.05);
+    }
+
+    .result {
+      text-align: center;
+      padding: 20px;
+      display: none;
+    }
+
+    .result ul {
+      list-style-type: none;
+      padding-left: 0;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+
+    .result ul li {
+      margin-bottom: 8px;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 18px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #45a049;
+    }
+
+    .feedback {
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    .correct {
+      color: green;
+      font-weight: bold;
+    }
+
+    .wrong {
+      color: red;
+      font-weight: bold;
+    }
+
+    #counter {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    #wrong-words-container {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 单词测试部分 -->
+    <div id="test-section">
+      <h1>单词测试</h1>
+      <div id="question-container"></div>
+      <div id="counter">已测试: 0/100</div>
+      <button id="start-test" class="btn" onclick="startTest()">开始测试</button>
+    </div>
+
+    <!-- 测试结果部分 -->
+    <div id="result-section" class="result">
+      <h2>测试结果</h2>
+      <p>正确率: <span id="score"></span>%</p>
+      <p>错误单词:</p>
+      <div id="wrong-words-container">
+        <ul id="wrong-words"></ul>
+      </div>
+      <button onclick="resetTest()" class="btn">重新测试</button>
+      <button onclick="exportResults()" class="btn" style="background-color: #2196F3;">导出结果</button>
+    </div>
+  </div>
+
+  <script>
+    // 这里是100个单词的模板数据，您可以自行填写实际的100个单词数据
+    const words = [
+            { word: "Pesticides", correct: "农药", wrongOptions: ["杀虫剂", "除草剂", "肥料"] },
+      { word: "Bio magnification", correct: "生物放大", wrongOptions: ["生物降解", "生物多样性", "生物控制"] },
+      { word: "Ecosystem", correct: "生态系统", wrongOptions: ["食物链", "栖息地", "生物圈"] },
+      { word: "Resistant", correct: "抵抗的", wrongOptions: ["敏感的", "脆弱的", "易受影响的"] },
+      { word: "Biological control", correct: "生物控制", wrongOptions: ["化学控制", "物理控制", "综合控制"] },
+      { word: "Integrated", correct: "综合的", wrongOptions: ["单一的", "局部的", "分散的"] },
+      { word: "Soil health", correct: "土壤健康", wrongOptions: ["土壤侵蚀", "土壤肥力", "土壤污染"] },
+      { word: "Composting", correct: "堆肥", wrongOptions: ["焚烧", "填埋", "回收"] },
+      { word: "Crops", correct: "农作物", wrongOptions: ["杂草", "树木", "花卉"] },
+      { word: "Ripple effects", correct: "连锁反应", wrongOptions: ["直接效应", "局部效应", "短期效应"] },
+      { word: "Environmental movement", correct: "环保运动", wrongOptions: ["工业革命", "科技革命", "农业革命"] },
+      { word: "Sustainable", correct: "可持续的", wrongOptions: ["短暂的", "不可持续的", "有限的"] },
+      { word: "Erosion", correct: "侵蚀", wrongOptions: ["沉积", "堆积", "固化"] },
+      { word: "Organic matter", correct: "有机物质", wrongOptions: ["无机物质", "化学物质", "矿物质"] },
+      { word: "Predators", correct: "捕食者", wrongOptions: ["猎物", "分解者", "生产者"] },
+      { word: "Interconnected", correct: "相互连接的", wrongOptions: ["独立的", "分离的", "孤立的"] },
+      { word: "Unintended consequences", correct: "意外后果", wrongOptions: ["预期结果", "直接效应", "短期效应"] },
+      { word: "Regulations", correct: "法规", wrongOptions: ["建议", "政策", "协议"] },
+      { word: "Resilient", correct: "有韧性的", wrongOptions: ["脆弱的", "易受影响的", "不稳定的"] },
+      { word: "Harmony", correct: "和谐", wrongOptions: ["冲突", "混乱", "对立"] },
+      { word: "Toxic", correct: "有毒的", wrongOptions: ["无害的", "有益的", "中性的"] },
+      { word: "Contamination", correct: "污染", wrongOptions: ["净化", "清洁", "过滤"] },
+      { word: "Food chain", correct: "食物链", wrongOptions: ["食物网", "生态系统", "生物圈"] },
+      { word: "Concentration", correct: "浓度", wrongOptions: ["稀释", "分散", "扩散"] },
+      { word: "Threat", correct: "威胁", wrongOptions: ["保护", "安全", "稳定"] },
+      { word: "Balance", correct: "平衡", wrongOptions: ["失衡", "倾斜", "不稳定"] },
+      { word: "Diversity", correct: "多样性", wrongOptions: ["单一性", "同质性", "一致性"] },
+      { word: "Impact", correct: "影响", wrongOptions: ["忽略", "无关", "中立"] },
+      { word: "Resilience", correct: "韧性", wrongOptions: ["脆弱", "易碎", "不稳定"] },
+      { word: "Disruption", correct: "破坏", wrongOptions: ["修复", "维护", "保护"] },
+      { word: "Harmful", correct: "有害的", wrongOptions: ["有益的", "无害的", "中性的"] },
+      { word: "Natural predators", correct: "天敌", wrongOptions: ["猎物", "分解者", "生产者"] },
+      { word: "Chain reaction", correct: "连锁反应", wrongOptions: ["直接效应", "局部效应", "短期效应"] },
+      { word: "Regulate", correct: "监管", wrongOptions: ["放任", "忽略", "放弃"] },
+      { word: "Awareness", correct: "意识", wrongOptions: ["无知", "忽视", "遗忘"] },
+      { word: "Sustainable agriculture", correct: "可持续农业", wrongOptions: ["传统农业", "工业化农业", "单一农业"] },
+      { word: "Ecosystem services", correct: "生态系统服务", wrongOptions: ["工业服务", "商业服务", "社会服务"] },
+      { word: "Toxicology", correct: "毒理学", wrongOptions: ["生物学", "生态学", "化学"] },
+      { word: "Environmentalist", correct: "环保主义者", wrongOptions: ["工业家", "商人", "政治家"] },
+      { word: "Conservation", correct: "保护", wrongOptions: ["破坏", "开发", "忽视"] },
+      { word: "Pollution", correct: "污染", wrongOptions: ["净化", "清洁", "过滤"] },
+      { word: "Habitat", correct: "栖息地", wrongOptions: ["食物链", "生态系统", "生物圈"] },
+      { word: "Biodiversity", correct: "生物多样性", wrongOptions: ["单一性", "同质性", "一致性"] },
+      { word: "Toxic substances", correct: "有毒物质", wrongOptions: ["无害物质", "有益物质", "中性物质"] },
+      { word: "Environmental degradation", correct: "环境退化", wrongOptions: ["环境改善", "环境保护", "环境修复"] },
+      { word: "Chemical exposure", correct: "化学物质暴露", wrongOptions: ["物理暴露", "生物暴露", "环境暴露"] },
+      { word: "Wildlife", correct: "野生动物", wrongOptions: ["家畜", "宠物", "植物"] },
+      { word: "Insecticide", correct: "杀虫剂", wrongOptions: ["除草剂", "杀菌剂", "肥料"] },
+      { word: "Herbicide", correct: "除草剂", wrongOptions: ["杀虫剂", "杀菌剂", "肥料"] },
+      { word: "Fungicide", correct: "杀菌剂", wrongOptions: ["杀虫剂", "除草剂", "肥料"] },
+      { word: "Non-target species", correct: "非目标物种", wrongOptions: ["目标物种", "天敌", "猎物"] },
+      { word: "Ecological balance", correct: "生态平衡", wrongOptions: ["生态失衡", "生态破坏", "生态崩溃"] },
+      { word: "Environmental policy", correct: "环境政策", wrongOptions: ["经济政策", "社会政策", "科技政策"] },
+      { word: "Public health", correct: "公共卫生", wrongOptions: ["个人健康", "心理健康", "职业健康"] },
+      { word: "Toxic waste", correct: "有毒废物", wrongOptions: ["无害废物", "可回收废物", "有机废物"] },
+      { word: "Impact", correct: "影响", wrongOptions: ["忽略", "无关", "中立"] },
+      { word: "Soil fertility", correct: "土壤肥力", wrongOptions: ["土壤侵蚀", "土壤污染", "土壤退化"] },
+      { word: "Water contamination", correct: "水污染", wrongOptions: ["水净化", "水清洁", "水过滤"] },
+      { word: "Awareness", correct: "意识", wrongOptions: ["无知", "忽视", "遗忘"] },
+      { word: "Sustainable", correct: "可持续", wrongOptions: ["短暂的", "不可持续的", "有限的"] },
+      { word: "Resistance", correct: "抗药性", wrongOptions: ["敏感性", "脆弱性", "易感性"] },
+      { word: "Dependency", correct: "依赖", wrongOptions: ["独立", "自主", "自给自足"] },
+      { word: "Crisis", correct: "危机", wrongOptions: ["稳定", "安全", "平衡"] },
+      { word: "Resources", correct: "资源", wrongOptions: ["浪费", "消耗", "枯竭"] },
+      { word: "Services", correct: "服务", wrongOptions: ["产品", "商品", "工具"] },
+      { word: "Degradation", correct: "退化", wrongOptions: ["改善", "修复", "保护"] },
+      { word: "Stewardship", correct: "管理", wrongOptions: ["破坏", "忽视", "放弃"] },
+      { word: "Runoff", correct: "径流", wrongOptions: ["渗透", "蒸发", "沉积"] },
+      { word: "Diversity", correct: "多样性", wrongOptions: ["单一性", "同质性", "一致性"] },
+      { word: "Ethics", correct: "伦理", wrongOptions: ["道德", "法律", "规则"] },
+      { word: "Outbreak", correct: "爆发", wrongOptions: ["控制", "抑制", "预防"] },
+      { word: "Organisms", correct: "生物", wrongOptions: ["矿物", "化学物质", "无机物"] },
+      { word: "Advocacy", correct: "倡导", wrongOptions: ["反对", "忽视", "放弃"] },
+      { word: "Pollution", correct: "污染", wrongOptions: ["净化", "清洁", "过滤"] },
+      { word: "Farming", correct: "农业", wrongOptions: ["工业", "商业", "科技"] },
+      { word: "Legislation", correct: "立法", wrongOptions: ["行政", "司法", "执法"] },
+      { word: "Erosion", correct: "侵蚀", wrongOptions: ["沉积", "堆积", "固化"] },
+      { word: "Health", correct: "健康", wrongOptions: ["疾病", "虚弱", "不适"] },
+      { word: "Residues", correct: "残留", wrongOptions: ["清除", "净化", "过滤"] },
+      { word: "Sustainability", correct: "可持续性", wrongOptions: ["短暂性", "不可持续性", "有限性"] },
+      { word: "Toxicity", correct: "毒性", wrongOptions: ["无害性", "有益性", "中性"] },
+      { word: "Contaminants", correct: "污染物", wrongOptions: ["净化物", "清洁物", "过滤物"] },
+      { word: "Fertility", correct: "肥力", wrongOptions: ["贫瘠", "退化", "污染"] },
+      { word: "Microorganisms", correct: "微生物", wrongOptions: ["宏观生物", "植物", "动物"] },
+      { word: "Pollinators", correct: "传粉者", wrongOptions: ["捕食者", "分解者", "生产者"] },
+      { word: "Herbivores", correct: "草食动物", wrongOptions: ["肉食动物", "杂食动物", "分解者"] },
+      { word: "Carnivores", correct: "肉食动物", wrongOptions: ["草食动物", "杂食动物", "分解者"] },
+      { word: "Omnivores", correct: "杂食动物", wrongOptions: ["草食动物", "肉食动物", "分解者"] },
+      { word: "Decomposers", correct: "分解者", wrongOptions: ["生产者", "消费者", "捕食者"] },
+      { word: "Ecosystems", correct: "生态系统", wrongOptions: ["食物链", "栖息地", "生物圈"] },
+      { word: "Bacteria", correct: "细菌", wrongOptions: ["病毒", "真菌", "寄生虫"] },
+      { word: "Fungi", correct: "真菌", wrongOptions: ["细菌", "病毒", "寄生虫"] },
+      { word: "Nutrients", correct: "养分", wrongOptions: ["毒素", "废物", "污染物"] },
+      { word: "Photosynthesis", correct: "光合作用", wrongOptions: ["呼吸作用", "分解作用", "发酵作用"] },
+      { word: "Erosion", correct: "侵蚀", wrongOptions: ["沉积", "堆积", "固化"] },
+      { word: "Sedimentation", correct: "沉积", wrongOptions: ["侵蚀", "堆积", "固化"] },
+      { word: "Aquatic", correct: "水生的", wrongOptions: ["陆地的", "空中的", "地下的"] },
+      { word: "Terrestrial", correct: "陆地的", wrongOptions: ["水生的", "空中的", "地下的"] },
+      { word: "Biodiversity", correct: "生物多样性", wrongOptions: ["单一性", "同质性", "一致性"] },
+      { word: "Conservation", correct: "保护", wrongOptions: ["破坏", "开发", "忽视"] }
+      // 您可以继续添加更多单词……
+    ];
+
+    let currentTest = [];
+    let wrongWords = [];
+    let testCounter = 0;
+
+    // 开始测试
+    function startTest() {
+      currentTest = words.slice(); // 一次测试所有单词
+      wrongWords = [];
+      testCounter = 0;
+      renderQuestion();
+      document.getElementById('test-section').style.display = 'block';
+      document.getElementById('result-section').style.display = 'none';
+    }
+
+    // 渲染题目
+    function renderQuestion() {
+      const container = document.getElementById('question-container');
+      if (currentTest.length === 0) {
+        showResult();
+        return;
+      }
+
+      const currentWord = currentTest[0];
+      const options = shuffleOptions([currentWord.correct, ...currentWord.wrongOptions]);
+
+      container.innerHTML = `
+        <div class="question">
+          <p><strong>${currentWord.word}</strong></p>
+          <div class="options">
+            ${options.map(option => `
+              <div class="option" onclick="checkAnswer('${option}', '${currentWord.correct}', this)">${option}</div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      // 更新计数器
+      testCounter++;
+      document.getElementById('counter').textContent = `已测试: ${testCounter}/100`;
+    }
+
+    // 检查答案
+    function checkAnswer(selected, correct, element) {
+      const feedback = document.createElement('div');
+      feedback.classList.add('feedback');
+      if (selected === correct) {
+        feedback.classList.add('correct');
+        feedback.textContent = "正确";
+      } else {
+        feedback.classList.add('wrong');
+        feedback.textContent = "错误";
+        wrongWords.push(currentTest[0].word);
+      }
+      element.appendChild(feedback);
+      setTimeout(() => {
+        currentTest.shift();
+        renderQuestion();
+      }, 1000); // 延迟1秒显示下一个问题
+    }
+
+    // 显示结果
+    function showResult() {
+      const score = ((100 - wrongWords.length) / 100 * 100).toFixed(2); // 计算正确率
+      document.getElementById('score').textContent = score;
+      document.getElementById('wrong-words').innerHTML = wrongWords.map(word => `<li>${word}</li>`).join('');
+      document.getElementById('test-section').style.display = 'none';
+      document.getElementById('result-section').style.display = 'block';
+    }
+
+    // 导出结果为TXT文件
+    function exportResults() {
+      const score = ((100 - wrongWords.length) / 100 * 100).toFixed(2);
+      let resultContent = `测试结果\n正确率: ${score}%\n\n错误单词:\n`;
+
+      wrongWords.forEach(word => {
+        resultContent += `${word}\n`;
+      });
+
+      const blob = new Blob([resultContent], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'test_result.txt';
+      link.click();
+    }
+
+    // 重置测试
+    function resetTest() {
+      document.getElementById('test-section').style.display = 'block';
+      document.getElementById('result-section').style.display = 'none';
+      startTest();
+    }
+
+    // 混洗选项
+    function shuffleOptions(options) {
+      return options.sort(() => Math.random() - 0.5);
+    }
+
+    // 初始化
+    startTest();
+  </script>
+</body>
+</html>
