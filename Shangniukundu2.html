@@ -1,0 +1,376 @@
+<!-- 123.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>单词测试</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      padding: 30px 40px;
+    }
+
+    h1, h2 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .question-container {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .question {
+      font-size: 28px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .option {
+      background-color: #f1f1f1;
+      padding: 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      text-align: center;
+      transition: background-color 0.3s, transform 0.3s;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .option:hover {
+      background-color: #ddd;
+      transform: scale(1.05);
+    }
+
+    .result {
+      text-align: center;
+      padding: 20px;
+      display: none;
+    }
+
+    .result ul {
+      list-style-type: none;
+      padding-left: 0;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+
+    .result ul li {
+      margin-bottom: 8px;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 18px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #45a049;
+    }
+
+    .feedback {
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    .correct {
+      color: green;
+      font-weight: bold;
+    }
+
+    .wrong {
+      color: red;
+      font-weight: bold;
+    }
+
+    #counter {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    #wrong-words-container {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 单词测试部分 -->
+    <div id="test-section">
+      <h1>单词测试</h1>
+      <div id="question-container"></div>
+      <div id="counter">已测试: 0/100</div>
+      <button id="start-test" class="btn" onclick="startTest()">开始测试</button>
+    </div>
+
+    <!-- 测试结果部分 -->
+    <div id="result-section" class="result">
+      <h2>测试结果</h2>
+      <p>正确率: <span id="score"></span>%</p>
+      <p>错误单词:</p>
+      <div id="wrong-words-container">
+        <ul id="wrong-words"></ul>
+      </div>
+      <button onclick="resetTest()" class="btn">重新测试</button>
+      <button onclick="exportResults()" class="btn" style="background-color: #2196F3;">导出结果</button>
+    </div>
+  </div>
+
+  <script>
+    // 这里是100个单词的模板数据，您可以自行填写实际的100个单词数据
+    const words = [
+      {"word": "Atom", "correct": "原子", "wrongOptions": ["质子", "中子", "电子"]},
+      {"word": "Matter", "correct": "物质", "wrongOptions": ["能量", "气体", "液体"]},
+      {"word": "Hydrogen", "correct": "氢", "wrongOptions": ["氦", "氧", "氮"]},
+      {"word": "Helium", "correct": "氦", "wrongOptions": ["氢", "氧", "碳"]},
+      {"word": "Supernova", "correct": "超新星", "wrongOptions": ["恒星", "黑洞", "星云"]},
+      {"word": "Galaxy", "correct": "星系", "wrongOptions": ["恒星", "行星系", "星团"]},
+      {"word": "Telescope", "correct": "望远镜", "wrongOptions": ["显微镜", "相机", "指南针"]},
+      {"word": "Gravity", "correct": "重力", "wrongOptions": ["磁力", "浮力", "弹力"]},
+      {"word": "Pluto", "correct": "冥王星", "wrongOptions": ["火星", "金星", "土星"]},
+      {"word": "Universe", "correct": "宇宙", "wrongOptions": ["银河系", "太阳系", "地球"]},
+      {"word": "Expansion", "correct": "膨胀", "wrongOptions": ["收缩", "静止", "旋转"]},
+      {"word": "Observation", "correct": "观察", "wrongOptions": ["实验", "理论", "假设"]},
+      {"word": "Orbit", "correct": "轨道", "wrongOptions": ["轨迹", "航线", "轨道车"]},
+      {"word": "Radiation", "correct": "辐射", "wrongOptions": ["反射", "折射", "衍射"]},
+      {"word": "Hypothesis", "correct": "假设", "wrongOptions": ["理论", "定律", "定理"]},
+      {"word": "Evolution", "correct": "进化", "wrongOptions": ["退化", "变异", "繁殖"]},
+      {"word": "Resilience", "correct": "韧性", "wrongOptions": ["脆弱性", "弹性", "刚性"]},
+      {"word": "Extinction", "correct": "灭绝", "wrongOptions": ["繁衍", "迁徙", "适应"]},
+      {"word": "Paleontology", "correct": "古生物学", "wrongOptions": ["考古学", "地质学", "人类学"]},
+      {"word": "Fossil", "correct": "化石", "wrongOptions": ["骨骼", "遗迹", "矿石"]},
+      {"word": "Probability", "correct": "概率", "wrongOptions": ["可能性", "机会", "频率"]},
+      {"word": "Astronomy", "correct": "天文学", "wrongOptions": ["物理学", "化学", "生物学"]},
+      {"word": "Impact", "correct": "影响", "wrongOptions": ["冲击", "作用", "反应"]},
+      {"word": "Hypothesis", "correct": "假设", "wrongOptions": ["理论", "事实", "观点"]},
+      {"word": "Radiocarbon", "correct": "放射性碳", "wrongOptions": ["碳", "氧", "氮"]},
+      {"word": "Innovation", "correct": "创新", "wrongOptions": ["发明", "创造", "革新"]},
+      {"word": "Climate", "correct": "气候", "wrongOptions": ["天气", "环境", "生态"]},
+      {"word": "Ozone", "correct": "臭氧", "wrongOptions": ["氧气", "氮气", "氢气"]},
+      {"word": "Pollution", "correct": "污染", "wrongOptions": ["净化", "保护", "治理"]},
+      {"word": "Experiment", "correct": "实验", "wrongOptions": ["观察", "理论", "假设"]},
+      {"word": "Mutation", "correct": "突变", "wrongOptions": ["变异", "进化", "繁殖"]},
+      {"word": "Heredity", "correct": "遗传", "wrongOptions": ["变异", "环境", "个性"]},
+      {"word": "Molecule", "correct": "分子", "wrongOptions": ["原子", "离子", "质子"]},
+      {"word": "Observation", "correct": "观察", "wrongOptions": ["实验", "理论", "假设"]},
+      {"word": "Discover", "correct": "发现", "wrongOptions": ["发明", "创造", "探索"]},
+      {"word": "Measure", "correct": "测量", "wrongOptions": ["估计", "计算", "评估"]},
+      {"word": "Develop", "correct": "发展", "wrongOptions": ["进步", "进化", "成长"]},
+      {"word": "Analyze", "correct": "分析", "wrongOptions": ["研究", "观察", "实验"]},
+      {"word": "Expand", "correct": "扩展", "wrongOptions": ["收缩", "聚焦", "深入"]},
+      {"word": "Preserve", "correct": "保存", "wrongOptions": ["保护", "维护", "修复"]},
+      {"word": "Extinction", "correct": "灭绝", "wrongOptions": ["繁衍", "迁徙", "进化"]},
+      {"word": "Paleontology", "correct": "古生物学", "wrongOptions": ["考古学", "地质学", "人类学"]},
+      {"word": "Fossil", "correct": "化石", "wrongOptions": ["骨骼", "遗迹", "矿石"]},
+      {"word": "Geology", "correct": "地质学", "wrongOptions": ["考古学", "天文学", "生物学"]},
+      {"word": "Sediment", "correct": "沉积物", "wrongOptions": ["沙子", "泥土", "石块"]},
+      {"word": "Erosion", "correct": "侵蚀", "wrongOptions": ["风化", "磨损", "腐蚀"]},
+      {"word": "Crater", "correct": "陨石坑", "wrongOptions": ["火山口", "峡谷", "湖泊"]},
+      {"word": "Dinosaur", "correct": "恐龙", "wrongOptions": ["鸟类", "爬行动物", "哺乳动物"]},
+      {"word": "Radiation", "correct": "辐射", "wrongOptions": ["光", "热", "电"]},
+      {"word": "Mutation", "correct": "突变", "wrongOptions": ["变异", "进化", "繁殖"]},
+      {"word": "Specimen", "correct": "标本", "wrongOptions": ["样品", "模型", "工具"]},
+      {"word": "Astronomer", "correct": "天文学家", "wrongOptions": ["物理学家", "化学家", "生物学家"]},
+      {"word": "Predator", "correct": "捕食者", "wrongOptions": ["猎物", "食草动物", "杂食动物"]},
+      {"word": "Adaptation", "correct": "适应", "wrongOptions": ["变异", "进化", "退化"]},
+      {"word": "Replicate", "correct": "复制", "wrongOptions": ["繁殖", "变异", "进化"]},
+      {"word": "Survive", "correct": "生存", "wrongOptions": ["死亡", "灭绝", "进化"]},
+      {"word": "Evolve", "correct": "进化", "wrongOptions": ["变异", "衰退", "繁殖"]},
+      {"word": "Discover", "correct": "发现", "wrongOptions": ["发明", "创造", "探索"]},
+      {"word": "Analyze", "correct": "分析", "wrongOptions": ["观察", "实验", "假设"]},
+      {"word": "Hypothesize", "correct": "假设", "wrongOptions": ["理论", "事实", "观点"]},
+      {"word": "Oxygen", "correct": "氧气", "wrongOptions": ["氮气", "二氧化碳", "氢气"]},
+      {"word": "Photosynthesis", "correct": "光合作用", "wrongOptions": ["呼吸作用", "分解作用", "发酵作用"]},
+      {"word": "Bacteria", "correct": "细菌", "wrongOptions": ["病毒", "真菌", "藻类"]},
+      {"word": "Genome", "correct": "基因组", "wrongOptions": ["染色体", "基因", "DNA"]},
+      {"word": "Evolution", "correct": "进化", "wrongOptions": ["变异", "衰退", "繁殖"]},
+      {"word": "Extinct", "correct": "灭绝的", "wrongOptions": ["稀有的", "濒危的", "普通的"]},
+      {"word": "Microscopic", "correct": "微观的", "wrongOptions": ["宏观的", "巨大的", "庞大的"]},
+      {"word": "Adaptable", "correct": "适应能力强的", "wrongOptions": ["脆弱的", "敏感的", "易变的"]},
+      {"word": "Fertility", "correct": "肥沃度/繁殖能力", "wrongOptions": ["贫瘠度", "干旱度", "沙漠化"]},
+      {"word": "Radioactive", "correct": "放射性的", "wrongOptions": ["活性的", "惰性的", "稳定的"]},
+      {"word": "Quantum", "correct": "量子的", "wrongOptions": ["原子的", "分子的", "离子的"]},
+      {"word": "Chemical", "correct": "化学的", "wrongOptions": ["物理的", "生物的", "地质的"]},
+      {"word": "Artificial", "correct": "人工的", "wrongOptions": ["自然的", "野生的", "原始的"]},
+      {"word": "Cognitive", "correct": "认知的", "wrongOptions": ["感性的", "直觉的", "情感的"]},
+      {"word": "Unravel", "correct": "解开/揭示", "wrongOptions": ["纠结", "隐瞒", "隐藏"]},
+      {"word": "Dominate", "correct": "主导", "wrongOptions": ["服从", "辅助", "协作"]},
+      {"word": "Determine", "correct": "确定", "wrongOptions": ["猜测", "假设", "估算"]},
+      {"word": "Revolutionize", "correct": "彻底改变", "wrongOptions": ["改进", "调整", "优化"]},
+      {"word": "Accelerate", "correct": "加速", "wrongOptions": ["减速", "停止", "平稳"]},
+      {"word": "Illustrate", "correct": "说明/阐明", "wrongOptions": ["混淆", "掩盖", "模糊"]},
+      {"word": "Protein", "correct": "蛋白质", "wrongOptions": ["脂肪", "碳水化合物", "纤维素"]},
+      {"word": "Enzyme", "correct": "酶", "wrongOptions": ["激素", "维生素", "矿物质"]},
+      {"word": "Molecule", "correct": "分子", "wrongOptions": ["原子", "离子", "质子"]},
+      {"word": "Replication", "correct": "复制", "wrongOptions": ["繁殖", "变异", "进化"]},
+      {"word": "Diversity", "correct": "多样性", "wrongOptions": ["单一性", "同质性", "统一性"]},
+      {"word": "Catastrophe", "correct": "灾难", "wrongOptions": ["幸运", "机遇", "好运"]},
+      {"word": "Innovation", "correct": "创新", "wrongOptions": ["发明", "创造", "革新"]},
+      {"word": "Hypothesis", "correct": "假设", "wrongOptions": ["理论", "事实", "观点"]},
+      {"word": "Extensive", "correct": "广泛的", "wrongOptions": ["狭窄的", "局限的", "局部的"]},
+      {"word": "Essential", "correct": "必要的", "wrongOptions": ["可选的", "多余的", "无关的"]},
+      {"word": "Interaction", "correct": "相互作用", "wrongOptions": ["独立", "孤立", "隔离"]},
+      {"word": "Genetic", "correct": "遗传的", "wrongOptions": ["环境的", "社会的", "文化的"]},
+      {"word": "Artificial", "correct": "人工的", "wrongOptions": ["自然的", "野生的", "原始的"]},
+      {"word": "Complexity", "correct": "复杂性", "wrongOptions": ["简单性", "单一性", "基础性"]},
+      {"word": "Stability", "correct": "稳定性", "wrongOptions": ["波动性", "不确定性", "不稳定性"]},
+      {"word": "Acceleration", "correct": "加速度", "wrongOptions": ["减速", "匀速", "静止"]},
+      {"word": "Observation", "correct": "观察", "wrongOptions": ["实验", "理论", "假设"]},
+      {"word": "Hypothesize", "correct": "假设", "wrongOptions": ["理论", "事实", "观点"]},
+      {"word": "Skeptical", "correct": "怀疑的", "wrongOptions": ["相信的", "确信的", "信任的"]},
+      {"word": "Breakthrough", "correct": "突破", "wrongOptions": ["停滞", "倒退", "停滞不前"]}
+    ];
+
+    let currentTest = [];
+    let wrongWords = [];
+    let testCounter = 0;
+
+    // 开始测试
+    function startTest() {
+      currentTest = words.slice(); // 一次测试所有单词
+      currentTest = shuffleArray(currentTest); // 打乱单词顺序
+      wrongWords = [];
+      testCounter = 0;
+      renderQuestion();
+      document.getElementById('test-section').style.display = 'block';
+      document.getElementById('result-section').style.display = 'none';
+    }
+
+    // 渲染题目
+    function renderQuestion() {
+      const container = document.getElementById('question-container');
+      if (currentTest.length === 0) {
+        showResult();
+        return;
+      }
+
+      const currentWord = currentTest[0];
+      const options = shuffleOptions([currentWord.correct, ...currentWord.wrongOptions]);
+
+      container.innerHTML = `
+        <div class="question">
+          <p><strong>${currentWord.word}</strong></p>
+          <div class="options">
+            ${options.map(option => `
+              <div class="option" onclick="checkAnswer('${option}', '${currentWord.correct}', this)">${option}</div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      // 更新计数器
+      testCounter++;
+      document.getElementById('counter').textContent = `已测试: ${testCounter}/100`;
+    }
+
+    // 检查答案
+    function checkAnswer(selected, correct, element) {
+      const feedback = document.createElement('div');
+      feedback.classList.add('feedback');
+      if (selected === correct) {
+        feedback.classList.add('correct');
+        feedback.textContent = "正确";
+      } else {
+        feedback.classList.add('wrong');
+        feedback.textContent = "错误";
+        wrongWords.push(currentTest[0].word);
+      }
+      element.appendChild(feedback);
+      setTimeout(() => {
+        currentTest.shift();
+        renderQuestion();
+      }, 1000); // 延迟1秒显示下一个问题
+    }
+
+    // 显示结果
+    function showResult() {
+      const score = ((100 - wrongWords.length) / 100 * 100).toFixed(2); // 计算正确率
+      document.getElementById('score').textContent = score;
+      document.getElementById('wrong-words').innerHTML = wrongWords.map(word => `<li>${word}</li>`).join('');
+      document.getElementById('test-section').style.display = 'none';
+      document.getElementById('result-section').style.display = 'block';
+    }
+
+    // 导出结果为TXT文件
+    function exportResults() {
+      const score = ((100 - wrongWords.length) / 100 * 100).toFixed(2);
+      let resultContent = `测试结果\n正确率: ${score}%\n\n错误单词:\n`;
+
+      wrongWords.forEach(word => {
+        resultContent += `${word}\n`;
+      });
+
+      const blob = new Blob([resultContent], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'test_result.txt';
+      link.click();
+    }
+
+    // 重置测试
+    function resetTest() {
+      document.getElementById('test-section').style.display = 'block';
+      document.getElementById('result-section').style.display = 'none';
+      startTest();
+    }
+
+    // 混洗选项
+    function shuffleOptions(options) {
+      return options.sort(() => Math.random() - 0.5);
+    }
+
+    // 打乱数组顺序的函数
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    // 初始化
+    startTest();
+  </script>
+</body>
+</html>
