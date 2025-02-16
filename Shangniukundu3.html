@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>科学英语词汇学习与测试</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      padding: 30px 40px;
+    }
+
+    h1, h2 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .question-container {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .question {
+      font-size: 28px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .option {
+      background-color: #f1f1f1;
+      padding: 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      text-align: center;
+      transition: background-color 0.3s, transform 0.3s;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .option:hover {
+      background-color: #ddd;
+      transform: scale(1.05);
+    }
+
+    .result {
+      text-align: center;
+      padding: 20px;
+      display: none;
+    }
+
+    .result ul {
+      list-style-type: none;
+      padding-left: 0;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+
+    .result ul li {
+      margin-bottom: 8px;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 18px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #45a049;
+    }
+
+    .feedback {
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    .correct {
+      color: green;
+      font-weight: bold;
+    }
+
+    .wrong {
+      color: red;
+      font-weight: bold;
+    }
+
+    #counter {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    #wrong-words-container {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="test-section">
+      <h1>科学英语词汇学习与测试</h1>
+      <div id="question-container"></div>
+      <div id="counter">已测试: 0/100</div>
+      <button id="start-test" class="btn" onclick="startTest()">开始测试</button>
+    </div>
+
+    <div id="result-section" class="result">
+      <h2>测试结果</h2>
+      <p>正确率: <span id="score"></span>%</p>
+      <p>错误单词:</p>
+      <div id="wrong-words-container">
+        <ul id="wrong-words"></ul>
+      </div>
+      <button onclick="resetTest()" class="btn">重新测试</button>
+      <button onclick="exportResults()" class="btn" style="background-color: #2196F3;">导出结果</button>
+    </div>
+  </div>
+
+  <script>
+    const words = [
+      
+      {"word": "Accurate", "correct": "精确的", "wrongOptions": ["错误的", "模糊的", "粗略的"]},
+      {"word": "Analyze", "correct": "分析", "wrongOptions": ["分类", "整理", "归纳"]},
+      {"word": "Calculate", "correct": "计算", "wrongOptions": ["统计", "汇总", "估算"]},
+      {"word": "Complex", "correct": "复杂的", "wrongOptions": ["简单的", "基础的", "单一的"]},
+      {"word": "Emerge", "correct": "出现", "wrongOptions": ["消失", "隐藏", "埋没"]},
+      {"word": "Expand", "correct": "扩展", "wrongOptions": ["收缩", "聚焦", "深入"]},
+      {"word": "Fragile", "correct": "脆弱的", "wrongOptions": ["坚固的", "耐久的", "结实的"]},
+      {"word": "Hypothesis", "correct": "假设", "wrongOptions": ["理论", "事实", "观点"]},
+      {"word": "Invisible", "correct": "看不见的", "wrongOptions": ["可见的", "透明的", "明了的"]},
+      {"word": "Measure", "correct": "测量", "wrongOptions": ["估计", "计算", "评估"]},
+      {"word": "Mysterious", "correct": "神秘的", "wrongOptions": ["熟悉的", "清楚的", "常见的"]},
+      {"word": "Observe", "correct": "观察", "wrongOptions": ["忽视", "躲避", "错过"]},
+      {"word": "Precise", "correct": "精确的", "wrongOptions": ["大致的", "近似的", "不准确的"]},
+      {"word": "Preserve", "correct": "保存", "wrongOptions": ["丢弃", "浪费", "破坏"]},
+      {"word": "Reflect", "correct": "反射", "wrongOptions": ["吸收", "透过", "折射"]},
+      {"word": "Significant", "correct": "重大的", "wrongOptions": ["微小的", "无关紧要的", "普通的"]},
+      {"word": "Stable", "correct": "稳定的", "wrongOptions": ["波动的", "变化的", "不稳定的"]},
+      {"word": "Variable", "correct": "变量", "wrongOptions": ["常量", "固定值", "不变项"]},
+      {"word": "Visible", "correct": "可见的", "wrongOptions": ["隐身的", "隐蔽的", "看不清的"]},
+      {"word": "Widespread", "correct": "广泛的", "wrongOptions": ["局部的", "狭窄的", "小范围的"]},
+      {"word": "Adapt", "correct": "适应", "wrongOptions": ["抵抗", "拒绝", "厌恶"]},
+      {"word": "Ancient", "correct": "古老的", "wrongOptions": ["现代的", "年轻的", "崭新的"]},
+      {"word": "Balance", "correct": "平衡", "wrongOptions": ["失控", "倾斜", "失衡"]},
+      {"word": "Breakthrough", "correct": "突破", "wrongOptions": ["停滞", "倒退", "徘徊"]},
+      {"word": "Chemical", "correct": "化学的", "wrongOptions": ["物理的", "生物的", "地理的"]},
+      {"word": "Collapse", "correct": "倒塌", "wrongOptions": ["支撑", "加固", "保护"]},
+      {"word": "Constant", "correct": "持续的", "wrongOptions": ["间断的", "偶尔的", "短暂的"]},
+      {"word": "Critical", "correct": "关键的", "wrongOptions": ["可选的", "无关的", "次要的"]},
+      {"word": "Decay", "correct": "腐烂", "wrongOptions": ["生长", "繁荣", "发展"]},
+      {"word": "Diverse", "correct": "多样化的", "wrongOptions": ["单一的", "相同的", "一致的"]},
+      {"word": "Efficient", "correct": "高效的", "wrongOptions": ["低效的", "浪费的", "多余的"]},
+      {"word": "Erosion", "correct": "侵蚀", "wrongOptions": ["堆积", "沉淀", "积累"]},
+      {"word": "Essential", "correct": "必要的", "wrongOptions": ["可选的", "多余的", "不重要的"]},
+      {"word": "Flexible", "correct": "灵活的", "wrongOptions": ["僵硬的", "固定的", "死板的"]},
+      {"word": "Generate", "correct": "产生", "wrongOptions": ["消耗", "减少", "消除"]},
+      {"word": "Gradual", "correct": "逐渐的", "wrongOptions": ["突然的", "急剧的", "快速的"]},
+      {"word": "Isolate", "correct": "隔离", "wrongOptions": ["联合", "结合", "靠近"]},
+      {"word": "Magnify", "correct": "放大", "wrongOptions": ["缩小", "压缩", "减少"]},
+      {"word": "Unique", "correct": "独特的", "wrongOptions": ["普通的", "常见的", "普通的"]},
+      {"word": "Accumulate", "correct": "积累", "wrongOptions": ["分散", "减少", "消耗"]},
+      {"word": "Artificial", "correct": "人工的", "wrongOptions": ["自然的", "野生的", "原始的"]},
+      {"word": "Boundary", "correct": "边界", "wrongOptions": ["中心", "内部", "核心"]},
+      {"word": "Condense", "correct": "凝结", "wrongOptions": ["蒸发", "升华", "汽化"]},
+      {"word": "Conserve", "correct": "保存", "wrongOptions": ["浪费", "破坏", "丢弃"]},
+      {"word": "Detect", "correct": "检测", "wrongOptions": ["忽略", "遗漏", "错过"]},
+      {"word": "Dynamic", "correct": "动态的", "wrongOptions": ["静态的", "固定的", "不变的"]},
+      {"word": "Evolve", "correct": "进化", "wrongOptions": ["退化", "退化", "灭亡"]},
+      {"word": "Generate", "correct": "产生", "wrongOptions": ["消耗", "减少", "消除"]},
+      {"word": "Immense", "correct": "巨大的", "wrongOptions": ["微小的", "细小的", "渺小的"]},
+      {"word": "Innovative", "correct": "创新的", "wrongOptions": ["保守的", "传统的", "老套的"]},
+      {"word": "Isolated", "correct": "隔离的", "wrongOptions": ["联合的", "结合的", "靠近的"]},
+      {"word": "Layer", "correct": "层", "wrongOptions": ["块", "片", "堆"]},
+      {"word": "Manipulate", "correct": "操控", "wrongOptions": ["顺从", "屈服", "听任"]},
+      {"word": "Migrate", "correct": "迁徙", "wrongOptions": ["定居", "停留", "固定"]},
+      {"word": "Persistent", "correct": "持续的", "wrongOptions": ["间断的", "偶尔的", "短暂的"]},
+      {"word": "Predict", "correct": "预测", "wrongOptions": ["回顾", "总结", "描述"]},
+      {"word": "Structure", "correct": "结构", "wrongOptions": ["混乱", "无序", "分散"]},
+      {"word": "Transform", "correct": "转变", "wrongOptions": ["坚持", "保持", "维持"]},
+      {"word": "Adaptation", "correct": "适应", "wrongOptions": ["抵抗", "拒绝", "厌恶"]},
+      {"word": "Alter", "correct": "改变", "wrongOptions": ["保持", "维持", "坚持"]},
+      {"word": "Biodiversity", "correct": "生物多样性", "wrongOptions": ["生物灭绝性", "单一种类性", "生物单一性"]},
+      {"word": "Compress", "correct": "压缩", "wrongOptions": ["膨胀", "延伸", "展开"]},
+      {"word": "Contaminate", "correct": "污染", "wrongOptions": ["净化", "清洁", "治理"]},
+      {"word": "Decay", "correct": "腐朽", "wrongOptions": ["生长", "茁壮", "繁荣"]},
+      {"word": "Efficient", "correct": "高效的", "wrongOptions": ["低效的", "浪费的", "多余的"]},
+      {"word": "Expand", "correct": "扩张", "wrongOptions": ["收缩", "聚焦", "深入"]},
+      {"word": "Fluctuate", "correct": "波动", "wrongOptions": ["平稳", "稳定", "固定"]},
+      {"word": "Habitat", "correct": "栖息地", "wrongOptions": ["保护区", "隔离区", "实验区"]},
+      {"word": "Hypothesize", "correct": "假设", "wrongOptions": ["理论", "事实", "观点"]},
+      {"word": "Impact", "correct": "影响", "wrongOptions": ["忽略", "忽视", "不影响"]},
+      {"word": "Nutrient", "correct": "营养物", "wrongOptions": ["有害物质", "毒素", "垃圾食品"]},
+      {"word": "Preserve", "correct": "保存", "wrongOptions": ["丢弃", "浪费", "破坏"]},
+      {"word": "Radiate", "correct": "辐射", "wrongOptions": ["吸收", "保持", "隐藏"]},
+      {"word": "Resilient", "correct": "有韧性的", "wrongOptions": ["脆弱的", "易碎的", "不耐用的"]},
+      {"word": "Stable", "correct": "稳定的", "wrongOptions": ["波动的", "变化的", "不稳定的"]},
+      {"word": "Sustain", "correct": "维持", "wrongOptions": ["放弃", "停止", "结束"]},
+      {"word": "Trace", "correct": "追踪", "wrongOptions": ["放弃", "丢失", "忽略"]},
+      {"word": "Vulnerable", "correct": "脆弱的", "wrongOptions": ["坚固的", "耐久的", "牢不可破的"]},
+      {"word": "Absorb", "correct": "吸收", "wrongOptions": ["排放", "释放", "排泄"]},
+      {"word": "Accelerate", "correct": "加速", "wrongOptions": ["减速", "停止", "平稳"]},
+      {"word": "Abundant", "correct": "丰富的", "wrongOptions": ["稀少的", "稀缺的", "匮乏的"]},
+      {"word": "Catastrophic", "correct": "灾难性的", "wrongOptions": ["幸运的", "吉利的", "美好的"]},
+      {"word": "Circulate", "correct": "循环", "wrongOptions": ["停止", "阻塞", "堵塞"]},
+      {"word": "Collapse", "correct": "倒塌", "wrongOptions": ["支撑", "建筑", "加固"]},
+      {"word": "Diminish", "correct": "减少", "wrongOptions": ["增加", "扩大", "提升"]},
+      {"word": "Disperse", "correct": "分散", "wrongOptions": ["集中", "聚集", "累积"]},
+      {"word": "Dissolve", "correct": "溶解", "wrongOptions": ["沉淀", "凝结", "汽化"]},
+      {"word": "Equilibrium", "correct": "平衡", "wrongOptions": ["失控", "倾斜", "失衡"]},
+      {"word": "Erosion", "correct": "侵蚀", "wrongOptions": ["堆积", "沉淀", "积累"]},
+      {"word": "Fluctuation", "correct": "波动", "wrongOptions": ["平稳", "稳定", "固定"]},
+      {"word": "Harness", "correct": "利用", "wrongOptions": ["浪费", "放弃", "丢弃"]},
+      {"word": "Inevitable", "correct": "不可避免的", "wrongOptions": ["可避免的", "可预防的", "可控制的"]},
+      {"word": "Optimize", "correct": "优化", "wrongOptions": ["恶化", "弱化", "降低"]},
+      {"word": "Phenomenon", "correct": "现象", "wrongOptions": ["理论", "假设", "观点"]},
+      {"word": "Prolong", "correct": "延长", "wrongOptions": ["缩短", "减少", "加快"]},
+      {"word": "React", "correct": "反应", "wrongOptions": ["无动于衷", "忽视", "错过"]},
+      {"word": "Restore", "correct": "恢复", "wrongOptions": ["破坏", "恶化", "污染"]},
+      {"word": "Surplus", "correct": "剩余", "wrongOptions": ["短缺", "不足", "缺少"]}
+    ];
+
+    let currentTest = [];
+    let wrongWords = [];
+    let testCounter = 0;
+
+    function startTest() {
+      currentTest = words.slice(); // 复制单词列表
+      currentTest = shuffleArray(currentTest); // 打乱单词顺序
+      wrongWords = [];
+      testCounter = 0;
+      renderQuestion();
+      document.getElementById('test-section').style.display = 'block';
+      document.getElementById('result-section').style.display = 'none';
+    }
+
+    function renderQuestion() {
+      const container = document.getElementById('question-container');
+      if (currentTest.length === 0) {
+        showResult();
+        return;
+      }
+
+      const currentWord = currentTest[0];
+      const options = shuffleOptions([currentWord.correct, ...currentWord.wrongOptions]);
+
+      container.innerHTML = `
+        <div class="question">
+          <p><strong>${currentWord.word}</strong></p>
+          <div class="options">
+            ${options.map(option => `
+              <div class="option" onclick="checkAnswer('${option}', '${currentWord.correct}', this)">${option}</div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      testCounter++;
+      document.getElementById('counter').textContent = `已测试: ${testCounter}/100`;
+    }
+
+    function checkAnswer(selected, correct, element) {
+      const feedback = document.createElement('div');
+      feedback.classList.add('feedback');
+      if (selected === correct) {
+        feedback.classList.add('correct');
+        feedback.textContent = "正确";
+      } else {
+        feedback.classList.add('wrong');
+        feedback.textContent = "错误";
+        wrongWords.push(currentTest[0].word);
+      }
+      element.appendChild(feedback);
+      setTimeout(() => {
+        currentTest.shift();
+        renderQuestion();
+      }, 1000);
+    }
+
+    function showResult() {
+      const score = ((100 - wrongWords.length) / 100 * 100).toFixed(2);
+      document.getElementById('score').textContent = score;
+      document.getElementById('wrong-words').innerHTML = wrongWords.map(word => `<li>${word}</li>`).join('');
+      document.getElementById('test-section').style.display = 'none';
+      document.getElementById('result-section').style.display = 'block';
+    }
+
+    function exportResults() {
+      const score = ((100 - wrongWords.length) / 100 * 100).toFixed(2);
+      let resultContent = `测试结果\n正确率: ${score}%\n\n错误单词:\n`;
+      wrongWords.forEach(word => {
+        resultContent += `${word}\n`;
+      });
+      const blob = new Blob([resultContent], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'test_result.txt';
+      link.click();
+    }
+
+    function resetTest() {
+      document.getElementById('test-section').style.display = 'block';
+      document.getElementById('result-section').style.display = 'none';
+      startTest();
+    }
+
+    function shuffleOptions(options) {
+      return options.sort(() => Math.random() - 0.5);
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    startTest();
+  </script>
+</body>
+</html>
