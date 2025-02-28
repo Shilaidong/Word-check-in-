@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>英语词汇学习与测试4</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      padding: 30px 40px;
+    }
+
+    h1, h2 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .question-container {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .question {
+      font-size: 28px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .option {
+      background-color: #f1f1f1;
+      padding: 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      text-align: center;
+      transition: background-color 0.3s, transform 0.3s;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .option:hover {
+      background-color: #ddd;
+      transform: scale(1.05);
+    }
+
+    .result {
+      text-align: center;
+      padding: 20px;
+      display: none;
+    }
+
+    .result ul {
+      list-style-type: none;
+      padding-left: 0;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+
+    .result ul li {
+      margin-bottom: 8px;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 18px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #45a049;
+    }
+
+    .feedback {
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    .correct {
+      color: green;
+      font-weight: bold;
+    }
+
+    .wrong {
+      color: red;
+      font-weight: bold;
+    }
+
+    #counter {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    #wrong-words-container {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="test-section">
+      <h1>英语词汇学习与测试4</h1>
+      <div id="question-container"></div>
+      <div id="counter">已测试: 0/100</div>
+      <button id="start-test" class="btn" onclick="startTest()">开始测试</button>
+    </div>
+
+    <div id="result-section" class="result">
+      <h2>测试结果</h2>
+      <p>正确率: <span id="score"></span>%</p>
+      <p>错误单词:</p>
+      <div id="wrong-words-container">
+        <ul id="wrong-words"></ul>
+      </div>
+      <button onclick="resetTest()" class="btn">重新测试</button>
+      <button onclick="exportResults()" class="btn" style="background-color: #2196F3;">导出结果</button>
+    </div>
+  </div>
+
+  <script>
+    const words = [
+      {"word": "Erosion", "correct": "腐蚀", "wrongOptions": ["积累", "堆积", "沉淀"]},
+      {"word": "Crystallography", "correct": "晶体学", "wrongOptions": ["地质学", "矿物学", "火山学"]},
+      {"word": "Sedimentary", "correct": "沉积的", "wrongOptions": ["火山的", "变质的", "岩浆的"]},
+      {"word": "Isotope", "correct": "同位素", "wrongOptions": ["元素", "化合物", "分子"]},
+      {"word": "Stratigraphy", "correct": "地层学", "wrongOptions": ["地质学", "矿物学", "火山学"]},
+      {"word": "Fossilization", "correct": "化石化", "wrongOptions": ["风化", "氧化", "还原"]},
+      {"word": "Extinct", "correct": "灭绝的", "wrongOptions": ["现存的", "繁盛的", "进化的"]},
+      {"word": "Magnetosphere", "correct": "磁层", "wrongOptions": ["电离层", "大气层", "对流层"]},
+      {"word": "Supernova", "correct": "超新星", "wrongOptions": ["恒星", "行星", "卫星"]},
+      {"word": "Nebula", "correct": "星云", "wrongOptions": ["星座", "星系", "星团"]},
+      {"word": "Quasar", "correct": "类星体", "wrongOptions": ["星系", "恒星", "行星"]},
+      {"word": "Paleontology", "correct": "古生物学", "wrongOptions": ["考古学", "地质学", "矿物学"]},
+      {"word": "Radiometric", "correct": "放射性测量的", "wrongOptions": ["化学的", "物理的", "生物的"]},
+      {"word": "Glaciation", "correct": "冰川作用", "wrongOptions": ["火山作用", "地震作用", "风化作用"]},
+      {"word": "Tectonic", "correct": "构造的", "wrongOptions": ["地貌的", "地质的", "地形的"]},
+      {"word": "Seismology", "correct": "地震学", "wrongOptions": ["地质学", "矿物学", "火山学"]},
+      {"word": "Anthropology", "correct": "人类学", "wrongOptions": ["考古学", "地质学", "矿物学"]},
+      {"word": "Evolutionary", "correct": "进化的", "wrongOptions": ["稳定的", "静态的", "不变的"]},
+      {"word": "Cosmology", "correct": "宇宙学", "wrongOptions": ["天文学", "物理学", "化学"]},
+      {"word": "Plateau", "correct": "高原", "wrongOptions": ["山脉", "平原", "盆地"]},
+      {"word": "Hydrology", "correct": "水文学", "wrongOptions": ["地质学", "矿物学", "火山学"]},
+      {"word": "Magma", "correct": "岩浆", "wrongOptions": ["熔岩", "矿物质", "岩石"]},
+      {"word": "Lithosphere", "correct": "岩石圈", "wrongOptions": ["地幔", "地核", "地壳"]},
+      {"word": "Biosphere", "correct": "生物圈", "wrongOptions": ["大气圈", "水圈", "岩石圈"]},
+      {"word": "Asteroid", "correct": "小行星", "wrongOptions": ["流星", "陨石", "彗星"]},
+      {"word": "Comet", "correct": "彗星", "wrongOptions": ["流星", "小行星", "卫星"]},
+      {"word": "Crater", "correct": "陨石坑", "wrongOptions": ["火山口", "峡谷", "山脉"]},
+      {"word": "Chronology", "correct": "年代学", "wrongOptions": ["考古学", "地质学", "矿物学"]},
+      {"word": "Extinction", "correct": "灭绝", "wrongOptions": ["进化", "适应", "变异"]},
+      {"word": "Ecliptic", "correct": "黄道", "wrongOptions": ["赤道", "经线", "纬线"]},
+      {"word": "Equinox", "correct": "昼夜平分点", "wrongOptions": ["夏至", "冬至", "昼夜分界点"]},
+      {"word": "Solstice", "correct": "至日", "wrongOptions": ["昼夜平分点", "春分", "秋分"]},
+      {"word": "Gravitational", "correct": "引力的", "wrongOptions": ["电磁的", "核的", "化学的"]},
+      {"word": "Orbit", "correct": "轨道", "wrongOptions": ["飞行路径", "轨迹", "航线"]},
+      {"word": "Density", "correct": "密度", "wrongOptions": ["体积", "质量", "重量"]},
+      {"word": "Vacuum", "correct": "真空", "wrongOptions": ["大气", "空间", "环境"]},
+      {"word": "Spectrum", "correct": "光谱", "wrongOptions": ["光线", "光束", "光晕"]},
+      {"word": "Photon", "correct": "光子", "wrongOptions": ["电子", "质子", "中子"]},
+      {"word": "Entropy", "correct": "熵", "wrongOptions": ["能量", "温度", "压力"]},
+      {"word": "Thermodynamics", "correct": "热力学", "wrongOptions": ["电动力学", "量子力学", "相对论"]},
+      {"word": "Kinetic", "correct": "动能的", "wrongOptions": ["势能的", "化学能的", "核能的"]},
+      {"word": "Momentum", "correct": "动量", "wrongOptions": ["能量", "力", "功率"]},
+      {"word": "Catalyst", "correct": "催化剂", "wrongOptions": ["抑制剂", "稳定剂", "染料"]},
+      {"word": "Oxidation", "correct": "氧化", "wrongOptions": ["还原", "分解", "合成"]},
+      {"word": "Combustion", "correct": "燃烧", "wrongOptions": ["蒸发", "凝结", "溶化"]},
+      {"word": "Diffusion", "correct": "扩散", "wrongOptions": ["浓缩", "聚集", "沉积"]},
+      {"word": "Fusion", "correct": "聚变", "wrongOptions": ["裂变", "衰变", "辐射"]},
+      {"word": "Fission", "correct": "裂变", "wrongOptions": ["聚变", "衰变", "辐射"]},
+      {"word": "Quantum", "correct": "量子", "wrongOptions": ["经典", "宏观", "连续"]},
+      {"word": "Singularity", "correct": "奇点", "wrongOptions": ["平衡点", "收敛点", "发散点"]},
+      {"word": "Algorithm", "correct": "算法", "wrongOptions": ["公式", "方程", "定理"]},
+      {"word": "Fractal", "correct": "分形", "wrongOptions": ["几何体", "曲线", "图形"]},
+      {"word": "Nanotechnology", "correct": "纳米技术", "wrongOptions": ["微米技术", "毫米技术", "厘米技术"]},
+      {"word": "Genome", "correct": "基因组", "wrongOptions": ["细胞", "蛋白质", "氨基酸"]},
+      {"word": "Mutation", "correct": "突变", "wrongOptions": ["变异", "基因漂变", "基因重组"]},
+      {"word": "Heredity", "correct": "遗传", "wrongOptions": ["变异", "进化", "适应"]},
+      {"word": "Cloning", "correct": "克隆", "wrongOptions": ["杂交", "转基因", "基因编辑"]},
+      {"word": "Biodiversity", "correct": "生物多样性", "wrongOptions": ["物种单一性", "生态系统稳定性", "生物灭绝性"]},
+      {"word": "Ecology", "correct": "生态学", "wrongOptions": ["环境科学", "地质学", "矿物学"]},
+      {"word": "Photosynthesis", "correct": "光合作用", "wrongOptions": ["呼吸作用", "分解作用", "发酵作用"]},
+      {"word": "Symbiosis", "correct": "共生", "wrongOptions": ["竞争", "寄生", "捕食"]},
+      {"word": "Predator", "correct": "捕食者", "wrongOptions": ["猎物", "食草动物", "生产者"]},
+      {"word": "Precipitation", "correct": "降水", "wrongOptions": ["蒸发", "凝结", "升华"]},
+      {"word": "Evaporation", "correct": "蒸发", "wrongOptions": ["凝结", "升华", "溶化"]},
+      {"word": "Condensation", "correct": "凝结", "wrongOptions": ["蒸发", "升华", "溶化"]},
+      {"word": "Carbonate", "correct": "碳酸盐", "wrongOptions": ["硅酸盐", "硫酸盐", "硝酸盐"]},
+      {"word": "Sulfur", "correct": "硫", "wrongOptions": ["磷", "硅", "铁"]},
+      {"word": "Alkaline", "correct": "碱性的", "wrongOptions": ["酸性的", "中性的", "氧化性的"]},
+      {"word": "Acidity", "correct": "酸度", "wrongOptions": ["中性度", "碱度", "导电性"]},
+      {"word": "Solubility", "correct": "溶解度", "wrongOptions": ["密度", "比重", "粘度"]},
+      {"word": "Mineralogy", "correct": "矿物学", "wrongOptions": ["地质学", "生态学", "生物学"]},
+      {"word": "Geochemistry", "correct": "地球化学", "wrongOptions": ["地质学", "生态学", "生物学"]},
+      {"word": "Volcanology", "correct": "火山学", "wrongOptions": ["地质学", "生态学", "生物学"]},
+      {"word": "Seismic", "correct": "地震的", "wrongOptions": ["火山的", "风化的", "侵蚀的"]},
+      {"word": "Epicenter", "correct": "震中", "wrongOptions": ["震源", "地震波", "震级"]},
+      {"word": "Aftershock", "correct": "余震", "wrongOptions": ["主震", "前震", "地震波"]},
+      {"word": "Tsunami", "correct": "海啸", "wrongOptions": ["潮汐", "飓风", "台风"]},
+      {"word": "Fault", "correct": "断层", "wrongOptions": ["褶皱", "节理", "岩脉"]},
+      {"word": "Ecosystem", "correct": "生态系统", "wrongOptions": ["生态位", "生态幅", "生态分布"]},
+      {"word": "Habitat", "correct": "栖息地", "wrongOptions": ["生物圈", "生态位", "生态幅"]},
+      {"word": "Endangered", "correct": "濒危的", "wrongOptions": ["常见的", "稳定的", "繁荣的"]},
+      {"word": "Deforestation", "correct": "森林砍伐", "wrongOptions": ["植树造林", "林区管理", "森林保护"]},
+      {"word": "Reforestation", "correct": "重新造林", "wrongOptions": ["森林砍伐", "林区规划", "森林病虫害防治"]},
+      {"word": "Carbon Cycle", "correct": "碳循环", "wrongOptions": ["氮循环", "氧循环", "水循环"]},
+      {"word": "Greenhouse Gas", "correct": "温室气体", "wrongOptions": ["氧气", "氮气", "氩气"]},
+      {"word": "Ozone Layer", "correct": "臭氧层", "wrongOptions": ["对流层", "平流层", "外层空间"]},
+      {"word": "Biosphere", "correct": "生物圈", "wrongOptions": ["大气圈", "水圈", "岩石圈"]},
+      {"word": "Trophic", "correct": "营养的", "wrongOptions": ["能量的", "物质的", "信息的"]},
+      {"word": "Autotroph", "correct": "自养生物", "wrongOptions": ["异养生物", "寄生生物", "腐生生物"]},
+      {"word": "Heterotroph", "correct": "异养生物", "wrongOptions": ["自养生物", "寄生生物", "共生生物"]},
+      {"word": "Decomposer", "correct": "分解者", "wrongOptions": ["生产者", "消费者", "捕食者"]},
+      {"word": "Pollination", "correct": "授粉", "wrongOptions": ["传粉", "植物繁殖", "植物开花"]},
+      {"word": "Eutrophication", "correct": "富营养化", "wrongOptions": ["贫营养化", "生态系统平衡", "生物多样性增加"]},
+      {"word": "Photosphere", "correct": "光球层", "wrongOptions": ["日冕层", "色球层", "太阳风层"]},
+      {"word": "Chromosphere", "correct": "色球层", "wrongOptions": ["光球层", "日冕层", "太阳风层"]},
+      {"word": "Corona", "correct": "日冕", "wrongOptions": ["光球层", "色球层", "太阳风层"]},
+      {"word": "Heliosphere", "correct": "太阳圈", "wrongOptions": ["日球层", "太阳风层", "星际介质"]},
+      {"word": "Astrobiology", "correct": "天体生物学", "wrongOptions": ["外星生物学", "宇宙生物学", "星际生物学"]},
+      {"word": "Exoplanet", "correct": "系外行星", "wrongOptions": ["彗星", "小行星", "陨石"]},
+      {"word": "Terraforming", "correct": "行星改造", "wrongOptions": ["行星勘探", "行星开发", "行星保护"]},
+    ];
+
+    let currentTest = [];
+    let wrongWords = [];
+    let testCounter = 0;
+
+    function startTest() {
+      currentTest = words.slice();
+      currentTest = shuffleArray(currentTest);
+      wrongWords = [];
+      testCounter = 0;
+      renderQuestion();
+      document.getElementById('test-section').style.display = 'block';
+      document.getElementById('result-section').style.display = 'none';
+    }
+
+    function renderQuestion() {
+      const container = document.getElementById('question-container');
+      if (currentTest.length === 0) {
+        showResult();
+        return;
+      }
+
+      const currentWord = currentTest[0];
+      const options = shuffleOptions([currentWord.correct, ...currentWord.wrongOptions]);
+
+      container.innerHTML = `
+        <div class="question">
+          <p><strong>${currentWord.word}</strong></p>
+          <div class="options">
+            ${options.map(option => `
+              <div class="option" onclick="checkAnswer('${option}', '${currentWord.correct}', this)">${option}</div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      testCounter++;
+      document.getElementById('counter').textContent = `已测试: ${testCounter}/100`;
+    }
+
+    function checkAnswer(selected, correct, element) {
+      const feedback = document.createElement('div');
+      feedback.classList.add('feedback');
+      if (selected === correct) {
+        feedback.classList.add('correct');
+        feedback.textContent = "正确";
+      } else {
+        feedback.classList.add('wrong');
+        feedback.textContent = "错误";
+        wrongWords.push(currentTest[0].word);
+      }
+      element.appendChild(feedback);
+      setTimeout(() => {
+        currentTest.shift();
+        renderQuestion();
+      }, 1000);
+    }
+
+    function showResult() {
+      const score = ((100 - wrongWords.length) / 100 * 100).toFixed(2);
+      document.getElementById('score').textContent = score;
+      document.getElementById('wrong-words').innerHTML = wrongWords.map(word => `<li>${word}</li>`).join('');
+      document.getElementById('test-section').style.display = 'none';
+      document.getElementById('result-section').style.display = 'block';
+    }
+
+    function exportResults() {
+      const score = ((100 - wrongWords.length) / 100 * 100).toFixed(2);
+      let resultContent = `测试结果\n正确率: ${score}%\n\n错误单词:\n`;
+      wrongWords.forEach(word => {
+        resultContent += `${word}\n`;
+      });
+      const blob = new Blob([resultContent], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'test_result.txt';
+      link.click();
+    }
+
+    function resetTest() {
+      document.getElementById('test-section').style.display = 'block';
+      document.getElementById('result-section').style.display = 'none';
+      startTest();
+    }
+
+    function shuffleOptions(options) {
+      return options.sort(() => Math.random() - 0.5);
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    startTest();
+  </script>
+</body>
+</html>
