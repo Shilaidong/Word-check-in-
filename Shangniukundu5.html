@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>英语词汇学习与测试 - 文学主题</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      padding: 30px 40px;
+    }
+
+    h1, h2 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .question-container {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .question {
+      font-size: 28px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .option {
+      background-color: #f1f1f1;
+      padding: 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      text-align: center;
+      transition: background-color 0.3s, transform 0.3s;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .option:hover {
+      background-color: #ddd;
+      transform: scale(1.05);
+    }
+
+    .result {
+      text-align: center;
+      padding: 20px;
+      display: none;
+    }
+
+    .result ul {
+      list-style-type: none;
+      padding-left: 0;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+
+    .result ul li {
+      margin-bottom: 8px;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 18px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #45a049;
+    }
+
+    .feedback {
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    .correct {
+      color: green;
+      font-weight: bold;
+    }
+
+    .wrong {
+      color: red;
+      font-weight: bold;
+    }
+
+    #counter {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    #wrong-words-container {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="test-section">
+      <h1>英语词汇学习与测试 - 文学主题</h1>
+      <div id="question-container"></div>
+      <div id="counter">已测试: 0/100</div>
+      <button id="start-test" class="btn" onclick="startTest()">开始测试</button>
+    </div>
+
+    <div id="result-section" class="result">
+      <h2>测试结果</h2>
+      <p>正确率: <span id="score"></span>%</p>
+      <p>错误单词:</p>
+      <div id="wrong-words-container">
+        <ul id="wrong-words"></ul>
+      </div>
+      <button onclick="resetTest()" class="btn">重新测试</button>
+      <button onclick="exportResults()" class="btn" style="background-color: #2196F3;">导出结果</button>
+    </div>
+  </div>
+
+  <script>
+    const words = [
+      {"word": "Accident", "correct": "事故", "wrongOptions": ["意外", "偶然", "碰撞"]},
+      {"word": "Admire", "correct": "钦佩", "wrongOptions": ["欣赏", "崇拜", "仰慕"]},
+      {"word": "Adventures", "correct": "冒险", "wrongOptions": ["旅行", "探险", "经历"]},
+      {"word": "Adventurer", "correct": "冒险家", "wrongOptions": ["探险者", "旅行者", "探索者"]},
+      {"word": "Adventurous", "correct": "冒险的", "wrongOptions": ["大胆的", "勇敢的", "无畏的"]},
+      {"word": "Affection", "correct": "喜爱", "wrongOptions": ["爱情", "关爱", "亲情"]},
+      {"word": "Age", "correct": "年龄", "wrongOptions": ["时代", "时期", "岁月"]},
+      {"word": "Agony", "correct": "极度痛苦", "wrongOptions": ["悲伤", "痛楚", "折磨"]},
+      {"word": "Aim", "correct": "目标", "wrongOptions": ["目的", "意图", "方向"]},
+      {"word": "Almanac", "correct": "历书", "wrongOptions": ["年鉴", "日历", "手册"]},
+      {"word": "Ambassador", "correct": "大使", "wrongOptions": ["使者", "代表", "特使"]},
+      {"word": "Amusement", "correct": "娱乐", "wrongOptions": ["乐趣", "消遣", "快乐"]},
+      {"word": "Annoyed", "correct": "烦恼的", "wrongOptions": ["生气的", "恼怒的", "不满的"]},
+      {"word": "Appreciate", "correct": "欣赏", "wrongOptions": ["感激", "珍惜", "重视"]},
+      {"word": "Appreciation", "correct": "欣赏", "wrongOptions": ["感激", "赞赏", "鉴赏"]},
+      {"word": "Arid", "correct": "干旱的", "wrongOptions": ["贫瘠的", "荒芜的", "干燥的"]},
+      {"word": "Arrangement", "correct": "安排", "wrongOptions": ["布置", "计划", "协议"]},
+      {"word": "Art", "correct": "艺术", "wrongOptions": ["技巧", "技艺", "才能"]},
+      {"word": "Astonish", "correct": "使惊讶", "wrongOptions": ["使震惊", "使吃惊", "使诧异"]},
+      {"word": "Astronomer", "correct": "天文学家", "wrongOptions": ["宇航员", "航天员", "物理学家"]},
+      {"word": "Authority", "correct": "权威", "wrongOptions": ["权力", "职权", "权限"]},
+      {"word": "Aversion", "correct": "厌恶", "wrongOptions": ["反感", "憎恨", "讨厌"]},
+      {"word": "Baffled", "correct": "困惑的", "wrongOptions": ["迷惑的", "疑惑的", "不解的"]},
+      {"word": "Banal", "correct": "平凡的", "wrongOptions": ["普通的", "寻常的", "平庸的"]},
+      {"word": "Bargain", "correct": "交易", "wrongOptions": ["讨价还价", "协商", "买卖"]},
+      {"word": "Bewildered", "correct": "迷惑的", "wrongOptions": ["困惑的", "不解的", "茫然的"]},
+      {"word": "Blunder", "correct": "失误", "wrongOptions": ["错误", "过失", "疏忽"]},
+      {"word": "Bored", "correct": "无聊的", "wrongOptions": ["厌倦的", "乏味的", "单调的"]},
+      {"word": "Breeze", "correct": "微风", "wrongOptions": ["清风", "和风", "轻风"]},
+      {"word": "Burrow", "correct": "洞穴", "wrongOptions": ["巢穴", "地洞", "窝"]},
+      {"word": "Butterfly", "correct": "蝴蝶", "wrongOptions": ["蜜蜂", "蜻蜓", "飞蛾"]},
+      {"word": "Caterpillar", "correct": "毛毛虫", "wrongOptions": ["蚕", "蠕虫", "幼虫"]},
+      {"word": "Celebration", "correct": "庆祝", "wrongOptions": ["庆典", "纪念", "欢庆"]},
+      {"word": "Character", "correct": "性格", "wrongOptions": ["品格", "特性", "人物"]},
+      {"word": "Cherish", "correct": "珍惜", "wrongOptions": ["珍爱", "爱护", "珍视"]},
+      {"word": "Civilized", "correct": "文明的", "wrongOptions": ["开化的", "有教养的", "有礼貌的"]},
+      {"word": "Clumsy", "correct": "笨拙的", "wrongOptions": ["笨重的", "笨手笨脚的", "不灵活的"]},
+      {"word": "Companion", "correct": "伙伴", "wrongOptions": ["同伴", "同伙", "朋友"]},
+      {"word": "Compliment", "correct": "赞美", "wrongOptions": ["恭维", "称赞", "表扬"]},
+      {"word": "Confusion", "correct": "混乱", "wrongOptions": ["困惑", "迷惑", "不解"]},
+      {"word": "Consequence", "correct": "重要性", "wrongOptions": ["结果", "后果", "影响"]},
+      {"word": "Conspicuous", "correct": "醒目的", "wrongOptions": ["显眼的", "明显的", "突出的"]},
+      {"word": "Content", "correct": "满足的", "wrongOptions": ["满意的", "知足的", "开心的"]},
+      {"word": "Convinced", "correct": "确信的", "wrongOptions": ["相信的", "肯定的", "坚信的"]},
+      {"word": "Coward", "correct": "胆小鬼", "wrongOptions": ["懦夫", "怯懦者", "胆怯者"]},
+      {"word": "Crash", "correct": "坠毁", "wrongOptions": ["碰撞", "撞击", "坠落"]},
+      {"word": "Curiosity", "correct": "好奇心", "wrongOptions": ["求知欲", "好奇", "探究心"]},
+      {"word": "Curious", "correct": "好奇的", "wrongOptions": ["奇怪的", "古怪的", "稀奇的"]},
+      {"word": "Decent", "correct": "像样的", "wrongOptions": ["体面的", "得体的", "合适的"]},
+      {"word": "Dejected", "correct": "沮丧的", "wrongOptions": ["失落的", "消沉的", "垂头丧气的"]},
+      {"word": "Delight", "correct": "高兴", "wrongOptions": ["喜悦", "快乐", "欢喜"]},
+      {"word": "Depressed", "correct": "抑郁的", "wrongOptions": ["沮丧的", "消沉的", "忧郁的"]},
+      {"word": "Desert", "correct": "沙漠", "wrongOptions": ["荒漠", "荒原", "荒地"]},
+      {"word": "Devote", "correct": "投入", "wrongOptions": ["奉献", "专注", "致力"]},
+      {"word": "Dignity", "correct": "尊严", "wrongOptions": ["威严", "庄严", "体面"]},
+      {"word": "Dilemma", "correct": "两难困境", "wrongOptions": ["困境", "窘境", "难题"]},
+      {"word": "Disappointment", "correct": "失望", "wrongOptions": ["沮丧", "懊恼", "遗憾"]},
+      {"word": "Disgust", "correct": "厌恶", "wrongOptions": ["反感", "恶心", "憎恨"]},
+      {"word": "Disturb", "correct": "打扰", "wrongOptions": ["干扰", "妨碍", "搅扰"]},
+      {"word": "Doubt", "correct": "怀疑", "wrongOptions": ["疑虑", "疑惑", "不确定"]},
+      {"word": "Dread", "correct": "恐惧", "wrongOptions": ["畏惧", "害怕", "惧怕"]},
+      {"word": "Eager", "correct": "热切的", "wrongOptions": ["渴望的", "急切的", "迫切的"]},
+      {"word": "Elegance", "correct": "优雅", "wrongOptions": ["高贵", "典雅", "雅致"]},
+      {"word": "Embarrassed", "correct": "尴尬的", "wrongOptions": ["害羞的", "窘迫的", "难堪的"]},
+      {"word": "Endure", "correct": "忍受", "wrongOptions": ["容忍", "承受", "经受"]},
+      {"word": "Enthusiasm", "correct": "热情", "wrongOptions": ["激情", "热忱", "热心"]},
+      {"word": "Essential", "correct": "重要的", "wrongOptions": ["必要的", "必需的", "基本的"]},
+      {"word": "Estranged", "correct": "疏远的", "wrongOptions": ["隔阂的", "陌生的", "生疏的"]},
+      {"word": "Exhausted", "correct": "筋疲力尽的", "wrongOptions": ["疲惫的", "疲劳的", "精疲力竭的"]},
+      {"word": "Fascinate", "correct": "迷住", "wrongOptions": ["吸引", "着迷", "入迷"]},
+      {"word": "Favor", "correct": "好感", "wrongOptions": ["恩惠", "偏爱", "青睐"]},
+      {"word": "Fidelity", "correct": "忠诚", "wrongOptions": ["忠实", "忠心", "忠贞"]},
+      {"word": "Fleeting", "correct": "短暂的", "wrongOptions": ["转瞬即逝的", "稍纵即逝的", "瞬间的"]},
+      {"word": "Flustered", "correct": "慌乱的", "wrongOptions": ["紧张的", "不安的", "焦虑的"]},
+      {"word": "Fond", "correct": "喜欢的", "wrongOptions": ["喜爱的", "钟爱的", "偏爱的"]},
+      {"word": "Fragile", "correct": "脆弱的", "wrongOptions": ["易碎的", "娇嫩的", "纤弱的"]},
+      {"word": "Fuss", "correct": "大惊小怪", "wrongOptions": ["小题大做", "忙乱", "焦躁"]},
+      {"word": "Gentle", "correct": "温柔的", "wrongOptions": ["温和的", "轻柔的", "和善的"]},
+      {"word": "Gleam", "correct": "闪光", "wrongOptions": ["闪烁", "闪耀", "闪亮"]},
+      {"word": "Glimpse", "correct": "一瞥", "wrongOptions": ["瞥见", "瞄一眼", "看一眼"]},
+      {"word": "Gloomy", "correct": "阴郁的", "wrongOptions": ["忧郁的", "阴沉的", "沮丧的"]},
+      {"word": "Gossip", "correct": "流言蜚语", "wrongOptions": ["闲话", "八卦", "谣言"]},
+      {"word": "Gracious", "correct": "优雅的", "wrongOptions": ["和蔼的", "亲切的", "慈祥的"]},
+      {"word": "Grief", "correct": "悲伤", "wrongOptions": ["悲痛", "伤心", "哀伤"]},
+      {"word": "Habit", "correct": "习惯", "wrongOptions": ["习性", "惯例", "常规"]},
+      {"word": "Harmony", "correct": "和谐", "wrongOptions": ["和睦", "融洽", "协调"]},
+      {"word": "Haste", "correct": "匆忙", "wrongOptions": ["急忙", "仓促", "匆促"]},
+      {"word": "Humble", "correct": "谦逊的", "wrongOptions": ["谦虚的", "谦卑的", "谦恭的"]},
+      {"word": "Ignorant", "correct": "无知的", "wrongOptions": ["愚昧的", "不知道的", "不了解的"]},
+      {"word": "Imagination", "correct": "想象力", "wrongOptions": ["想象", "幻想", "构想"]},
+      {"word": "Impatient", "correct": "不耐烦的", "wrongOptions": ["急躁的", "焦急的", "急切的"]},
+      {"word": "Insignificant", "correct": "无足轻重的", "wrongOptions": ["微不足道的", "不重要的", "不显眼的"]},
+      {"word": "Intrigue", "correct": "阴谋诡计", "wrongOptions": ["诡计", "计谋", "密谋"]},
+      {"word": "Isolate", "correct": "隔离", "wrongOptions": ["孤立", "分离", "隔绝"]},
+      {"word": "Jealous", "correct": "嫉妒的", "wrongOptions": ["妒忌的", "羡慕的", "忌妒的"]},
+      {"word": "Journey", "correct": "旅行", "wrongOptions": ["旅程", "行程", "旅途"]},
+      {"word": "Kindness", "correct": "善良", "wrongOptions": ["友善", "好心", "仁慈"]},
+      {"word": "Lament", "correct": "悲叹", "wrongOptions": ["哀叹", "叹息", "悲叹"]},
+      {"word": "Lonely", "correct": "孤独的", "wrongOptions": ["寂寞的", "独自的", "单独的"]},
+      {"word": "Magic", "correct": "魔法", "wrongOptions": ["魔术", "巫术", "法术"]}
+    ];
+
+    let currentTest = [];
+    let wrongWords = [];
+    let testCounter = 0;
+
+    function startTest() {
+      currentTest = words.slice();
+      currentTest = shuffleArray(currentTest);
+      wrongWords = [];
+      testCounter = 0;
+      renderQuestion();
+      document.getElementById('test-section').style.display = 'block';
+      document.getElementById('result-section').style.display = 'none';
+    }
+
+    function renderQuestion() {
+      const container = document.getElementById('question-container');
+      if (currentTest.length === 0) {
+        showResult();
+        return;
+      }
+
+      const currentWord = currentTest[0];
+      const options = shuffleOptions([currentWord.correct, ...currentWord.wrongOptions]);
+
+      container.innerHTML = `
+        <div class="question">
+          <p><strong>${currentWord.word}</strong></p>
+          <div class="options">
+            ${options.map(option => `
+              <div class="option" onclick="checkAnswer('${option}', '${currentWord.correct}', this)">${option}</div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      testCounter++;
+      document.getElementById('counter').textContent = `已测试: ${testCounter}/100`;
+    }
+
+    function checkAnswer(selected, correct, element) {
+      const feedback = document.createElement('div');
+      feedback.classList.add('feedback');
+      if (selected === correct) {
+        feedback.classList.add('correct');
+        feedback.textContent = "正确";
+      } else {
+        feedback.classList.add('wrong');
+        feedback.textContent = "错误";
+        wrongWords.push(currentTest[0].word);
+      }
+      element.appendChild(feedback);
+      setTimeout(() => {
+        currentTest.shift();
+        renderQuestion();
+      }, 1000);
+    }
+
+    function showResult() {
+      const score = ((100 - wrongWords.length) / 100 * 100).toFixed(2);
+      document.getElementById('score').textContent = score;
+      document.getElementById('wrong-words').innerHTML = wrongWords.map(word => `<li>${word}</li>`).join('');
+      document.getElementById('test-section').style.display = 'none';
+      document.getElementById('result-section').style.display = 'block';
+    }
+
+    function exportResults() {
+      const score = ((100 - wrongWords.length) / 100 * 100).toFixed(2);
+      let resultContent = `测试结果\n正确率: ${score}%\n\n错误单词:\n`;
+      wrongWords.forEach(word => {
+        resultContent += `${word}\n`;
+      });
+      const blob = new Blob([resultContent], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'test_result.txt';
+      link.click();
+    }
+
+    function resetTest() {
+      document.getElementById('test-section').style.display = 'block';
+      document.getElementById('result-section').style.display = 'none';
+      startTest();
+    }
+
+    function shuffleOptions(options) {
+      return options.sort(() => Math.random() - 0.5);
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    startTest();
+  </script>
+</body>
+</html>
