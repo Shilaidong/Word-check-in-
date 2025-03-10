@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025暑期商科项目推荐 - 为蔚雨辰同学定制</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --info-color: #3498db;
+            --text-color: #34495e;
+            --border-color: #ddd;
+            --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', 'Poppins', sans-serif;
+            color: var(--text-color);
+            line-height: 1.7;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 80px 0 100px;
+            margin-bottom: 80px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0 0 50% 50% / 20%;
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.2;
+            z-index: 0;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin: 40px 0 20px;
+            color: var(--primary-color);
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            border-radius: 2px;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 25px 0 15px;
+            color: var(--secondary-color);
+        }
+        
+        .section {
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .student-profile {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            margin-top: -50px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .profile-section {
+            margin-bottom: 20px;
+        }
+        
+        .profile-section h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .profile-section h3 i {
+            margin-right: 10px;
+            color: var(--secondary-color);
+            font-size: 1.4rem;
+        }
+        
+        .profile-section ul {
+            list-style-type: none;
+            padding-left: 10px;
+        }
+        
+        .profile-section ul li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+        }
+        
+        .profile-section ul li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+        
+        .program-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .program-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .program-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        .program-header {
+            padding: 20px 25px;
+            position: relative;
+            overflow: hidden;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        
+        .program-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+            opacity: 0.85;
+            transition: transform 0.5s ease;
+        }
+        
+        .program-card:hover .program-header::before {
+            transform: scale(1.1);
+        }
+        
+        .oxford .program-header::before {
+            background-image: url('https://www.sundaytour.com.tw/upfiles/chinese/attractions/tw_attractions_caty1543208235.jpg');
+        }
+        
+        .imperial .program-header::before {
+            background-image: url('https://q7.itc.cn/images01/20241128/fff6bf11d05443718983bf4e76b8c157.png');
+        }
+        
+        .cambridge .program-header::before {
+            background-image: url('https://cdn.getyourguide.com/img/location/5c10eb2e55553.jpeg/99.jpg');
+        }
+        
+        .program-header h3 {
+            color: white;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+            font-size: 1.6rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .program-body {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .program-details {
+            margin-bottom: 25px;
+        }
+        
+        .detail-item {
+            display: flex;
+            margin-bottom: 12px;
+            align-items: flex-start;
+        }
+        
+        .detail-icon {
+            color: var(--secondary-color);
+            margin-right: 10px;
+            font-size: 1.2rem;
+            width: 25px;
+            text-align: center;
+            margin-top: 3px;
+        }
+        
+        .detail-content {
+            flex: 1;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 3px;
+        }
+        
+        .highlights {
+            background-color: var(--light-color);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .highlights h4 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .highlights h4 i {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+        
+        .highlights ul {
+            padding-left: 20px;
+        }
+        
+        .highlights ul li {
+            margin-bottom: 8px;
+        }
+        
+        .program-footer {
+            margin-top: auto;
+            padding-top: 20px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 500;
+            display: inline-block;
+            text-decoration: none;
+            transition: var(--transition);
+            text-align: center;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .comparison-section {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            margin: 60px 0;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 30px 0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .comparison-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 500;
+        }
+        
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: var(--light-color);
+        }
+        
+        .comparison-table tr:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+        
+        .chart-container {
+            margin: 40px 0;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .chart-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .chart-title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .recommendation {
+            background: linear-gradient(135deg, #f6f9fc, #eef2f7);
+            padding: 40px;
+            border-radius: 15px;
+            margin: 60px 0;
+            border-left: 5px solid var(--accent-color);
+            box-shadow: var(--card-shadow);
+        }
+        
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .pros, .cons {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .pros h4, .cons h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .pros h4 i, .cons h4 i {
+            margin-right: 10px;
+        }
+        
+        .pros h4 {
+            color: var(--success-color);
+        }
+        
+        .pros h4 i {
+            color: var(--success-color);
+        }
+        
+        .cons h4 {
+            color: var(--accent-color);
+        }
+        
+        .cons h4 i {
+            color: var(--accent-color);
+        }
+        
+        .recommendation ol {
+            padding-left: 20px;
+        }
+        
+        .recommendation ol li {
+            margin-bottom: 20px;
+        }
+        
+        .recommendation strong {
+            color: var(--primary-color);
+        }
+        
+        .conclusion {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin-top: 60px;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .conclusion p {
+            margin-bottom: 15px;
+        }
+        
+        .conclusion p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--light-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+            border-radius: 3px;
+        }
+        
+        .timeline-container {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+        
+        .timeline-container::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background-color: white;
+            border: 4px solid var(--secondary-color);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .left {
+            left: 0;
+        }
+        
+        .right {
+            left: 50%;
+        }
+        
+        .left::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            right: 30px;
+            border: medium solid var(--light-color);
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent var(--light-color);
+        }
+        
+        .right::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            left: 30px;
+            border: medium solid var(--light-color);
+            border-width: 10px 10px 10px 0;
+            border-color: transparent var(--light-color) transparent transparent;
+        }
+        
+        .right::after {
+            left: -10px;
+        }
+        
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: white;
+            position: relative;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .timeline-content h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+        
+        .timeline-date {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 80px;
+            padding: 40px 0;
+            color: #777;
+            background-color: var(--primary-color);
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        footer p {
+            margin-bottom: 10px;
+        }
+        
+        @media screen and (max-width: 768px) {
+            .header {
+                padding: 60px 0 80px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .program-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-container {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-container::before {
+                left: 60px;
+                border: medium solid var(--light-color);
+                border-width: 10px 10px 10px 0;
+                border-color: transparent var(--light-color) transparent transparent;
+            }
+            
+            .left::after, .right::after {
+                left: 15px;
+            }
+            
+            .right {
+                left: 0%;
+            }
+        }
+        
+        /* Badge styles */
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .badge-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .badge-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .badge-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .badge-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .badge-info {
+            background-color: var(--info-color);
+            color: white;
+        }
+        
+        /* Tooltip styles */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--dark-color) transparent transparent transparent;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1>2025年暑期商科项目推荐</h1>
+                <p class="lead">为蔚雨辰同学量身定制的英国顶尖商科暑期项目分析与建议</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <section class="student-profile">
+            <h2>学生情况分析</h2>
+            <div class="profile-grid">
+                <div class="profile-section">
+                    <h3><i class="fas fa-user-graduate"></i> 基本信息</h3>
+                    <ul>
+                        <li>姓名：蔚雨辰</li>
+                        <li>年级：高一/G10</li>
+                        <li>学校排名：30多名左右</li>
+                    </ul>
+                </div>
+                
+                <div class="profile-section">
+                    <h3><i class="fas fa-book-open"></i> 学业情况</h3>
+                    <ul>
+                        <li>已报考AP课程：微积分、微观经济学</li>
+                        <li>英语水平：雅思总分5.5
+                            <div>
+                                <span class="badge badge-info">听力 5.5</span>
+                                <span class="badge badge-warning">阅读 4.5</span>
+                                <span class="badge badge-info">写作 5.5</span>
+                                <span class="badge badge-info">口语 5.5</span>
+                            </div>
+                        </li>
+                        <li>数学：基础公式掌握良好，但应用能力有待提高</li>
+                    </ul>
+                </div>
+                
+                <div class="profile-section">
+                    <h3><i class="fas fa-heart"></i> 性格特点</h3>
+                    <ul>
+                        <li>性格外向，善于交际</li>
+                        <li>对医学研究不感兴趣</li>
+                        <li>数学不是特别擅长</li>
+                    </ul>
+                </div>
+                
+                <div class="profile-section">
+                    <h3><i class="fas fa-compass"></i> 规划意向</h3>
+                    <ul>
+                        <li>专业方向：倾向金融/商科</li>
+                        <li>留学意向：主要考虑英国，其次是香港、新加坡、澳洲等</li>
+                        <li>职业发展：开放态度，家长支持创业等多元发展</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>暑期项目详细介绍</h2>
+            
+            <div class="program-cards">
+                <div class="program-card imperial">
+                    <div class="program-header">
+                        <h3>帝国理工创业夏校 (ProEd)</h3>
+                    </div>
+                    <div class="program-body">
+                        <div class="program-details">
+                            <div class="detail-item">
+                                <div class="detail-icon"><i class="fas fa-pound-sign"></i></div>
+                                <div class="detail-content">
+                                    <span class="detail-label">项目费用</span>
+                                    6,950英镑（约合人民币63,500元）
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-icon"><i class="fas fa-user-friends"></i></div>
+                                <div class="detail-content">
+                                    <span class="detail-label">适合年龄</span>
+                                    13-18岁
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-icon"><i class="fas fa-calendar-alt"></i></div>
+                                <div class="detail-content">
+                                    <span class="detail-label">项目时长</span>
+                                    2周
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-icon"><i class="fas fa-clock"></i></div>
+                                <div class="detail-content">
+                                    <span class="detail-label">开课日期</span>
+                                    2025年7月21日至8月2日
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                <div class="detail-content">
+                                    <span class="detail-label">项目地点</span>
+                                    伦敦帝国理工学院
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="highlights">
+                            <h4><i class="fas fa-star"></i> 项目亮点</h4>
+                            <ul>
+                                <li>类似"龙穴"(Dragon's Den)风格的创业项目展示</li>
+                                <li>参观欧洲领先的初创企业，获取行业内部见解</li>
+                                <li>学习如何撰写世界一流的大学申请材料</li>
+                                <li>住宿在帝国理工学院校园内，体验伦敦学术生活</li>
+                                <li>获得项目完成证书和导师报告</li>
+                            </ul>
+                        </div>
+                        
+                        <p>帝国理工创业夏校是为有志于创业的年轻人设计的加速器体验。在伦敦这个创业中心，学生将学习创业策略、商业模式开发和创意思维。项目包括参观伦敦创新企业、与专业人士交流，以及最终向风投专家展示自己的创业想法。该项目还特别关注大学申请过程，帮助学生为未来的学术发展做准备。</p>
+                        
+                        <div class="program-footer">
+                            <a href="https://proedetal.com/programs/future-entrepreneur-programme/" class="btn btn-primary w-100" target="_blank">
+                                <i class="fas fa-external-link-alt me-2"></i> 访问官方网站
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="program-card cambridge">
+                    <div class="program-header">
+                        <h3>剑桥大学金融与经济课程</h3>
+                    </div>
+                    <div class="program-body">
+                        <div class="program-details">
+                            <div class="detail-item">
+                                <div class="detail-icon"><i class="fas fa-yen-sign"></i></div>
+                                <div class="detail-content">
+                                    <span class="detail-label">项目费用</span>
+                                    42,800人民币
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-icon"><i class="fas fa-calendar-alt"></i></div>
+                                <div class="detail-content">
+                                    <span class="detail-label">项目时长</span>
+                                    2周
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-icon"><i class="fas fa-clock"></i></div>
+                                <div class="detail-content">
+                                    <span class="detail-label">开课日期</span>
+                                    2025年7月-8月（多个批次）
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                <div class="detail-content">
+                                    <span class="detail-label">项目地点</span>
+                                    剑桥大学校园
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="highlights">
+                            <h4><i class="fas fa-star"></i> 项目亮点</h4>
+                            <ul>
+                                <li>由剑桥大学教授和导师授课，学习经济学和金融基础</li>
+                                <li>参与股票市场模拟和投资组合管理实践</li>
+                                <li>小组项目：分析真实企业案例并提出投资建议</li>
+                                <li>体验剑桥大学传统的学院生活和文化活动</li>
+                                <li>获得剑桥大学官方项目证书</li>
+                            </ul>
+                        </div>
+                        
+                        <p>剑桥大学金融与经济课程为高中生提供了深入了解经济学和金融领域的机会。学生将学习经济理论、金融市场运作、投资策略和商业分析等内容。课程采用讲座、研讨会和实践活动相结合的方式，培养学生的批判性思维和分析能力。此外，学生还将体验剑桥大学独特的学院制生活，参观历史悠久的校园和周边地区。[[2]]</p>
+                        
+                        <div class="program-footer">
+                            <a href="https://www.cambridgeeducationgroup.com/our-programmes/academic/economics-finance.htm" class="btn btn-primary w-100" target="_blank">
+                                <i class="fas fa-external-link-alt me-2"></i> 访问官方网站
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="program-card oxford">
+                    <div class="program-header">
+                        <h3>牛津大学商业与企业家精神课程</h3>
+                    </div>
+                    <div class="program-body">
+                        <div class="program-details">
+                            <div class="detail-item">
+                                <div class="detail-icon"><i class="fas fa-pound-sign"></i></div>
+                                <div class="detail-content">
+                                    <span class="detail-label">项目费用</span>
+                                    5,995英镑（约合人民币55,000元）
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-icon"><i class="fas fa-user-friends"></i></div>
+                                <div class="detail-content">
+                                    <span class="detail-label">适合年龄</span>
+                                    16-18岁
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-icon"><i class="fas fa-calendar-alt"></i></div>
+                                <div class="detail-content">
+                                    <span class="detail-label">项目时长</span>
+                                    2周
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-icon"><i class="fas fa-clock"></i></div>
+                                <div class="detail-content">
+                                    <span class="detail-label">开课日期</span>
+                                    2025年7月-8月（多个批次）
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                <div class="detail-content">
+                                    <span class="detail-label">项目地点</span>
+                                    牛津大学校园
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="highlights">
+                            <h4><i class="fas fa-star"></i> 项目亮点</h4>
+                            <ul>
+                                <li>学习商业战略、市场营销和领导力等核心商业概念</li>
+                                <li>开发创业思维和创新解决问题的能力</li>
+                                <li>创建商业计划并向专家小组展示</li>
+                                <li>参观伦敦金融区和当地企业</li>
+                                <li>住宿在牛津大学历史悠久的学院内</li>
+                            </ul>
+                        </div>
+                        
+                        <p>牛津大学商业与企业家精神课程旨在培养学生的商业思维和创业技能。学生将学习商业基础知识、市场分析、品牌建设和财务规划等内容。课程特别强调实践学习，学生将组成团队开发自己的商业创意，并在课程结束时进行展示。此外，学生还将参观成功的企业，与企业家和商业领袖交流，获取宝贵的行业见解。[[3]](#__3)</p>
+                        
+                        <div class="program-footer">
+                            <a href="https://www.oxford-royale.com/summer-schools/oxford/courses/business-enterprise/" class="btn btn-primary w-100" target="_blank">
+                                <i class="fas fa-external-link-alt me-2"></i> 访问官方网站
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="chart-container">
+            <h2>数据对比分析</h2>
+            <div class="chart-grid">
+                <div class="chart-card">
+                    <div class="chart-title">项目费用对比（人民币）</div>
+                    <canvas id="costChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">项目内容侧重点分析</div>
+                    <canvas id="focusChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">英语要求对比</div>
+                    <canvas id="englishChart"></canvas>
+                                </div>
+            </div>
+        </section>
+        
+        <section class="comparison-section">
+            <h2>项目综合对比</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>对比项目</th>
+                        <th>帝国理工创业夏校</th>
+                        <th>剑桥大学金融与经济</th>
+                        <th>牛津大学商业与企业家精神</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>项目费用</strong></td>
+                        <td>63,500元</td>
+                        <td>42,800元</td>
+                        <td>55,000元</td>
+                    </tr>
+                    <tr>
+                        <td><strong>项目时长</strong></td>
+                        <td>2周</td>
+                        <td>2周</td>
+                        <td>2周</td>
+                    </tr>
+                    <tr>
+                        <td><strong>英语要求</strong></td>
+                        <td>雅思5.0以上</td>
+                        <td>雅思5.5以上</td>
+                        <td>雅思5.5以上</td>
+                    </tr>
+                    <tr>
+                        <td><strong>主要内容</strong></td>
+                        <td>创业思维、商业模式开发、创意思考</td>
+                        <td>经济学理论、金融市场、投资分析</td>
+                        <td>商业战略、市场营销、领导力</td>
+                    </tr>
+                    <tr>
+                        <td><strong>实践活动</strong></td>
+                        <td>创业项目开发、企业参观、创业展示</td>
+                        <td>股票市场模拟、投资组合管理</td>
+                        <td>商业计划开发、伦敦金融区参观</td>
+                    </tr>
+                    <tr>
+                        <td><strong>申请难度</strong></td>
+                        <td>中等</td>
+                        <td>中高</td>
+                        <td>中高</td>
+                    </tr>
+                    <tr>
+                        <td><strong>住宿安排</strong></td>
+                        <td>帝国理工学院校内住宿</td>
+                        <td>剑桥大学学院住宿</td>
+                        <td>牛津大学学院住宿</td>
+                    </tr>
+                    <tr>
+                        <td><strong>地理位置</strong></td>
+                        <td>伦敦市中心</td>
+                        <td>剑桥市</td>
+                        <td>牛津市</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        
+        <section class="section">
+            <h2>申请时间规划</h2>
+            <div class="timeline">
+
+                <div class="timeline-container right">
+                    <div class="timeline-content">
+                        <h3>2025年3月-4月</h3>
+                        <p><span class="timeline-date">申请阶段</span></p>
+                        <ul>
+                            <li>提交帝国理工创业夏校申请（1月截止）[[0]](#__0)</li>
+                            <li>提交剑桥大学金融与经济课程申请（2月截止）</li>
+                            <li>提交牛津大学商业与企业家精神课程申请（2月截止）</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-container left">
+                    <div class="timeline-content">
+                        <h3>2025年4月-5月</h3>
+                        <p><span class="timeline-date">录取阶段</span></p>
+                        <ul>
+                            <li>收到录取通知</li>
+                            <li>支付项目费用和押金</li>
+                            <li>确认最终参加的项目</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-container right">
+                    <div class="timeline-content">
+                        <h3>2025年5月-6月</h3>
+                        <p><span class="timeline-date">准备阶段</span></p>
+                        <ul>
+                            <li>办理英国签证</li>
+                            <li>购买国际机票</li>
+                            <li>购买旅行保险</li>
+                            <li>准备行李和必要物品</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-container left">
+                    <div class="timeline-content">
+                        <h3>2025年7月-8月</h3>
+                        <p><span class="timeline-date">项目执行阶段</span></p>
+                        <ul>
+                            <li>参加选定的暑期项目</li>
+                            <li>充分利用项目资源和机会</li>
+                            <li>与导师和同学建立联系</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="recommendation">
+            <h2>项目推荐与建议</h2>
+            
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4><i class="fas fa-thumbs-up"></i> 优势分析</h4>
+                    <ul>
+                        <li><strong>帝国理工创业夏校</strong>：创业导向强，实践性高，位于伦敦市中心，适合有创业兴趣的学生[[1]](#__1)</li>
+                        <li><strong>剑桥大学金融与经济</strong>：理论基础扎实，学术氛围浓厚，性价比高，适合想深入学习金融理论的学生</li>
+                        <li><strong>牛津大学商业与企业家精神</strong>：商业内容全面，校园体验丰富，品牌价值高，适合想全面了解商业的学生</li>
+                    </ul>
+                </div>
+                
+                <div class="cons">
+                    <h4><i class="fas fa-thumbs-down"></i> 劣势分析</h4>
+                    <ul>
+                        <li><strong>帝国理工创业夏校</strong>：费用较高，创业内容可能过于专业化</li>
+                        <li><strong>剑桥大学金融与经济</strong>：经济理论可能较抽象，对数学要求较高</li>
+                        <li><strong>牛津大学商业与企业家精神</strong>：内容可能较为广泛，深度不如专项课程</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>针对蔚雨辰同学的个性化建议</h3>
+            <ol>
+                <li>
+                    <strong>首选推荐：帝国理工创业夏校</strong>
+                    <p>考虑到蔚同学性格外向，善于交际，且对创业持开放态度，帝国理工的创业夏校最为适合。该项目注重实践和交流，位于伦敦市中心，提供丰富的企业参观和交流机会，非常适合蔚同学的性格特点和未来发展方向。虽然费用较高，但项目质量和资源也相对更丰富。[[0]]</p>
+                </li>
+                <li>
+                    <strong>备选推荐：牛津大学商业与企业家精神课程</strong>
+                    <p>如果希望体验更传统的英国顶尖大学氛围，牛津大学的商业课程是不错的选择。该课程内容全面，涵盖商业各个方面，同时也有创业元素，适合蔚同学全面了解商业领域。</p>
+                </li>
+                <li>
+                    <strong>不太推荐：剑桥大学金融与经济课程</strong>
+                    <p>虽然该课程性价比高，但考虑到蔚同学数学不是特别擅长，而经济学和金融理论对数学要求较高，可能会遇到一定困难。如果未来确定要走金融方向，可以考虑先提高数学能力再参加此类课程。</p>
+                </li>
+            </ol>
+            
+            <h3>申请准备建议</h3>
+            <ul>
+                <li><strong>英语提升</strong>：重点提高雅思阅读部分，从目前的4.5提升至少到5.5，以满足各项目的语言要求</li>
+                <li><strong>个人陈述</strong>：强调对商业和创业的兴趣，以及参与社交活动的经历和能力</li>
+                <li><strong>面试准备</strong>：准备讨论当前商业趋势、创新案例和个人职业规划的话题</li>
+                <li><strong>提前申请</strong>：这些热门项目名额有限，建议在申请开放后尽快提交申请材料</li>
+            </ul>
+        </section>
+        
+        <section class="conclusion">
+            <h2>总结</h2>
+            <p>根据蔚雨辰同学的个人情况和未来规划，英国顶尖大学的商科暑期项目是非常适合的选择。这些项目不仅能够提供高质量的学术体验，还能帮助蔚同学更好地了解商业和创业领域，为未来的专业选择和大学申请打下基础。</p>
+            
+            <p>在三个推荐的项目中，帝国理工创业夏校最为适合蔚同学的性格特点和发展方向，能够提供丰富的实践机会和国际交流平台。不过，无论选择哪个项目，都需要提前做好充分准备，特别是提高英语水平，以获得最佳的学习体验。</p>
+            
+            <p>最后，建议蔚同学和家长在做决定前，进一步研究这些项目的详细信息，包括课程内容、师资力量、学生评价等，以确保选择最适合自己的项目。同时，也可以考虑联系往届参加过这些项目的学生，获取第一手的体验分享。</p>
+        </section>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>© 2025 暑期商科项目推荐 | 为蔚雨辰同学定制 | AFY-EDU</p>
+            <p>本文档仅供参考，具体项目信息请以官方网站为准</p>
+        </div>
+    </footer>
+    
+    <script>
+        // 费用对比图表
+        const costCtx = document.getElementById('costChart').getContext('2d');
+        const costChart = new Chart(costCtx, {
+            type: 'bar',
+            data: {
+                labels: ['帝国理工', '剑桥大学', '牛津大学'],
+                datasets: [{
+                    label: '项目费用 (人民币)',
+                    data: [63500, 42800, 55000],
+                    backgroundColor: [
+                        'rgba(52, 152, 219, 0.7)',
+                        'rgba(46, 204, 113, 0.7)',
+                        'rgba(231, 76, 60, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(52, 152, 219, 1)',
+                        'rgba(46, 204, 113, 1)',
+                        'rgba(231, 76, 60, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '人民币 (元)'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 项目内容侧重点分析
+        const focusCtx = document.getElementById('focusChart').getContext('2d');
+        const focusChart = new Chart(focusCtx, {
+            type: 'radar',
+            data: {
+                labels: [
+                    '创业实践',
+                    '经济理论',
+                    '金融知识',
+                    '商业战略',
+                    '领导力',
+                    '市场营销'
+                ],
+                datasets: [{
+                    label: '帝国理工',
+                    data: [95, 60, 65, 80, 85, 75],
+                    fill: true,
+                    backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                    borderColor: 'rgba(52, 152, 219, 1)',
+                    pointBackgroundColor: 'rgba(52, 152, 219, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(52, 152, 219, 1)'
+                }, {
+                    label: '剑桥大学',
+                    data: [50, 95, 90, 70, 60, 65],
+                    fill: true,
+                    backgroundColor: 'rgba(46, 204, 113, 0.2)',
+                    borderColor: 'rgba(46, 204, 113, 1)',
+                    pointBackgroundColor: 'rgba(46, 204, 113, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(46, 204, 113, 1)'
+                }, {
+                    label: '牛津大学',
+                    data: [75, 70, 75, 90, 85, 90],
+                    fill: true,
+                    backgroundColor: 'rgba(231, 76, 60, 0.2)',
+                    borderColor: 'rgba(231, 76, 60, 1)',
+                    pointBackgroundColor: 'rgba(231, 76, 60, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(231, 76, 60, 1)'
+                }]
+            },
+            options: {
+                elements: {
+                    line: {
+                        borderWidth: 3
+                    }
+                },
+                scales: {
+                    r: {
+                        angleLines: {
+                            display: true
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                }
+            }
+        });
+        
+        // 英语要求对比
+        const englishCtx = document.getElementById('englishChart').getContext('2d');
+        const englishChart = new Chart(englishCtx, {
+            type: 'bar',
+            data: {
+                labels: ['帝国理工', '剑桥大学', '牛津大学', '蔚同学当前水平'],
+                datasets: [{
+                    label: '雅思要求/水平',
+                    data: [5.0, 5.5, 5.5, 5.5],
+                    backgroundColor: [
+                        'rgba(52, 152, 219, 0.7)',
+                        'rgba(46, 204, 113, 0.7)',
+                        'rgba(231, 76, 60, 0.7)',
+                        'rgba(241, 196, 15, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(52, 152, 219, 1)',
+                        'rgba(46, 204, 113, 1)',
+                        'rgba(231, 76, 60, 1)',
+                        'rgba(241, 196, 15, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 9,
+                        title: {
+                            display: true,
+                            text: '雅思分数'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 申请难度评估
+        const difficultyCtx = document.getElementById('difficultyChart').getContext('2d');
+        const difficultyChart = new Chart(difficultyCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['帝国理工', '剑桥大学', '牛津大学'],
+                datasets: [{
+                    label: '申请难度',
+                    data: [65, 80, 75],
+                    backgroundColor: [
+                        'rgba(52, 152, 219, 0.7)',
+                        'rgba(46, 204, 113, 0.7)',
+                        'rgba(231, 76, 60, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(52, 152, 219, 1)',
+                        'rgba(46, 204, 113, 1)',
+                        'rgba(231, 76, 60, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.raw + '/100';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
